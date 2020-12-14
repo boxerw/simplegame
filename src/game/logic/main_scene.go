@@ -5,7 +5,7 @@ import (
 )
 
 type MainScene struct {
-	scene Object
+	scene *Scene
 }
 
 func (logic *MainScene) Name() string {
@@ -13,16 +13,15 @@ func (logic *MainScene) Name() string {
 }
 
 func (logic *MainScene) Init(object Object) {
-	logic.scene = object
-	logic.scene.GetContext().SetValue("MainScene", object)
+	logic.scene = object.(*Scene)
+	logic.scene.GetContext().SetValue("MainScene", logic.scene)
 
 	player := NewActor(logic.scene.GetContext(), &Player{})
-	logic.scene.(Container).AddChild(player)
+	logic.scene.AddChild(player)
 }
 
 func (logic *MainScene) Shut() {
 }
 
 func (logic *MainScene) Update() {
-
 }

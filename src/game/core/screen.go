@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/mattn/go-runewidth"
 	"github.com/nsf/termbox-go"
-	"math/rand"
 )
 
 func NewScreen(ctx *Context, logic ...Logic) *Screen {
@@ -29,17 +28,12 @@ func (screen *Screen) Update() {
 		return
 	}
 
-	w, h := termbox.Size()
-	x := rand.Intn(w) / 2 * 2
-	y := rand.Intn(h)
-
-	screen.Draw(x, y, termbox.ColorDefault, termbox.Attribute(rand.Int()%256)+1, "  ")
+	screen.updateObject()
 
 	if screen.drawCount > 0 {
 		termbox.Flush()
+		screen.drawCount = 0
 	}
-
-	screen.updateObject()
 }
 
 func (screen *Screen) init() {
@@ -66,4 +60,9 @@ func (screen *Screen) Draw(x, y int, fg, bg termbox.Attribute, text string) {
 	}
 
 	screen.drawCount++
+}
+
+func (screen *Screen) Clear() {
+	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+	termbox.Flush()
 }
