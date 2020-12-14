@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"github.com/mattn/go-runewidth"
 	"github.com/nsf/termbox-go"
 )
@@ -38,7 +37,7 @@ func (screen *Screen) Update() {
 
 func (screen *Screen) init() {
 	if err := termbox.Init(); err != nil {
-		panic(fmt.Sprintf("termbox Init failed, %v", err))
+		panic(err)
 	}
 
 	termbox.SetInputMode(termbox.InputEsc | termbox.InputMouse)
