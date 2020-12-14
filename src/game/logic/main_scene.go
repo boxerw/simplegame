@@ -4,25 +4,25 @@ import (
 	. "simple/game/core"
 )
 
-type LogicMainScene struct {
+type MainScene struct {
 	scene Object
 }
 
-func (logic *LogicMainScene) Name() string {
+func (logic *MainScene) Name() string {
 	return "MainScene"
 }
 
-func (logic *LogicMainScene) Init(object Object) {
+func (logic *MainScene) Init(object Object) {
 	logic.scene = object
 	logic.scene.GetContext().SetValue("MainScene", object)
 
-	player := NewActor(logic.scene.GetContext(), &LogicPlayer{})
+	player := NewActor(logic.scene.GetContext(), &Player{})
 	logic.scene.(Container).AddChild(player)
 }
 
-func (logic *LogicMainScene) Shut() {
+func (logic *MainScene) Shut() {
 }
 
-func (logic *LogicMainScene) Update() {
+func (logic *MainScene) Update() {
 
 }

@@ -4,20 +4,20 @@ import (
 	. "simple/game/core"
 )
 
-type LogicPlayer struct {
+type Player struct {
 	actor Object
 }
 
-func (logic *LogicPlayer) Name() string {
+func (logic *Player) Name() string {
 	return "Player"
 }
 
-func (logic *LogicPlayer) Init(object Object) {
+func (logic *Player) Init(object Object) {
 	logic.actor = object
 }
 
-func (logic *LogicPlayer) Shut() {
+func (logic *Player) Shut() {
 }
 
-func (logic *LogicPlayer) Update() {
+func (logic *Player) Update() {
 }

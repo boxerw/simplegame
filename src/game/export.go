@@ -12,7 +12,7 @@ func Run() {
 		30,
 		false,
 		ctx,
-		core.NewScene(ctx, &logic.LogicMainScene{}),
+		core.NewScene(ctx, &logic.MainScene{}),
 		core.NewScreen(ctx),
 	)
 

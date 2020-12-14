@@ -2,8 +2,8 @@ package core
 
 import (
 	"fmt"
-	"github.com/mattn/go-runewidth"
 	"github.com/nsf/termbox-go"
+	"math/rand"
 )
 
 func NewScreen(ctx *Context, logic ...Logic) *Screen {
@@ -28,10 +28,14 @@ func (screen *Screen) Update() {
 		return
 	}
 
+	w, h := termbox.Size()
+	x := rand.Intn(w)
+	y := rand.Intn(h)
+
+	screen.Draw(x, y, termbox.ColorDefault, termbox.Attribute(rand.Int()%256)+1, " ")
+
 	if screen.drawCount > 0 {
-		if err := termbox.Flush(); err != nil {
-			panic(fmt.Sprintf("termbox Flush failed, %v", err))
-		}
+		termbox.Flush()
 	}
 
 	screen.updateObject()
@@ -43,7 +47,7 @@ func (screen *Screen) init() {
 	}
 
 	termbox.SetInputMode(termbox.InputEsc | termbox.InputMouse)
-	termbox.SetOutputMode(termbox.OutputRGB)
+	termbox.SetOutputMode(termbox.Output256)
 }
 
 func (screen *Screen) shut() {
@@ -57,7 +61,7 @@ func (screen *Screen) Draw(x, y int, fg, bg termbox.Attribute, text string) {
 
 	for _, c := range text {
 		termbox.SetCell(x, y, c, fg, bg)
-		x += runewidth.RuneWidth(c)
+		x += 1
 	}
 
 	screen.drawCount++
