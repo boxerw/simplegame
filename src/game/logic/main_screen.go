@@ -45,32 +45,22 @@ func (logic *MainScreen) Update() {
 			}
 			logic.caches = append(logic.caches, c)
 		} else {
-			randFun := func() int {
-				v := rand.Intn(2)
-				if v <= 0 {
-					return -1
-				}
-				return v
-			}
-
 			c := cache{
-				x:     logic.caches[len(logic.caches)-1].x + randFun(),
-				y:     logic.caches[len(logic.caches)-1].y + randFun(),
+				x:     logic.caches[len(logic.caches)-1].x + (rand.Intn(3)-1)*2,
+				y:     logic.caches[len(logic.caches)-1].y + (rand.Intn(3) - 1),
 				color: termbox.Attribute(rand.Int()%256) + 1,
 			}
 			w, h := termbox.Size()
 			if c.x < 0 {
-				c.x = w - 1
+				c.x = w - c.x
 			} else if c.x >= w {
-				c.x = 0
+				c.x = c.x - w
 			}
 			if c.y < 0 {
 				c.y = h - 1
 			} else if c.y >= h {
 				c.y = 0
 			}
-
-			c.x = c.x / 2 * 2
 
 			logic.caches = append(logic.caches, c)
 		}
