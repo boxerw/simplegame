@@ -36,8 +36,8 @@ func (drawCache *_DrawCache) Sort() {
 	})
 }
 
-func (drawCache *_DrawCache) Drawing() {
-	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+func (drawCache *_DrawCache) Drawing(fg, bg termbox.Attribute) {
+	termbox.Clear(fg, bg)
 
 	drawCache.Sort()
 

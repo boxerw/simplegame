@@ -27,6 +27,7 @@ func (logic *MainScreen) Name() string {
 func (logic *MainScreen) Init(object Object) {
 	logic.screen = object.(*Screen)
 	logic.screen.GetContext().SetValue("MainScreen", logic.screen)
+	logic.screen.SetCanvasFGBG(termbox.ColorRed, termbox.ColorWhite)
 	rand.Seed(time.Now().UnixNano())
 	logic.beginTime = time.Now()
 }

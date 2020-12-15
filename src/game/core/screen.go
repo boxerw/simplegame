@@ -13,7 +13,8 @@ func NewScreen(ctx *Context, logic ...Logic) *Screen {
 
 type Screen struct {
 	_ObjectBase
-	drawCache _DrawCache
+	drawCache          _DrawCache
+	canvasFG, canvasBG termbox.Attribute
 }
 
 func (screen *Screen) Destroy() {
@@ -28,7 +29,7 @@ func (screen *Screen) Update() {
 
 	screen.updateObject()
 
-	screen.drawCache.Drawing()
+	screen.drawCache.Drawing(screen.canvasFG, screen.canvasBG)
 }
 
 func (screen *Screen) init() {
@@ -44,8 +45,20 @@ func (screen *Screen) shut() {
 	termbox.Close()
 }
 
+func (screen *Screen) SetCanvasFGBG(fg, bg termbox.Attribute) {
+	if screen.GetZombie() {
+		return
+	}
+
+	screen.canvasFG, screen.canvasBG = fg, bg
+}
+
+func (screen *Screen) GetCanvasFGBG() (fg, bg termbox.Attribute) {
+	return screen.canvasFG, screen.canvasBG
+}
+
 func (screen *Screen) DrawMaps(layer, x, y int, maps Maps) {
-	if len(maps) <= 0 {
+	if screen.GetZombie() || len(maps) <= 0 {
 		return
 	}
 
@@ -58,6 +71,10 @@ func (screen *Screen) DrawMaps(layer, x, y int, maps Maps) {
 }
 
 func (screen *Screen) DrawShape(layer, x, y int, fg, bg termbox.Attribute, shape Shape) {
+	if screen.GetZombie() || len(shape) <= 0 {
+		return
+	}
+
 	maps := make(Maps, len(shape))
 	for i := 0; i < len(shape); i++ {
 		maps[i] = make([]Pixel, len(shape[i]))
@@ -69,10 +86,15 @@ func (screen *Screen) DrawShape(layer, x, y int, fg, bg termbox.Attribute, shape
 			}
 		}
 	}
+
 	screen.DrawMaps(layer, x, y, maps)
 }
 
 func (screen *Screen) DrawText(layer, x, y int, fg, bg termbox.Attribute, text string) {
+	if screen.GetZombie() || len(text) <= 0 {
+		return
+	}
+
 	maps := make(Maps, 1)
 	maps[0] = make([]Pixel, len(text))
 	for j, c := range text {
@@ -82,10 +104,6 @@ func (screen *Screen) DrawText(layer, x, y int, fg, bg termbox.Attribute, text s
 			Char: c,
 		}
 	}
-	screen.DrawMaps(layer, x, y, maps)
-}
 
-func (screen *Screen) Clear() {
-	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
-	termbox.Flush()
+	screen.DrawMaps(layer, x, y, maps)
 }
