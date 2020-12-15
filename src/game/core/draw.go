@@ -32,7 +32,7 @@ func (drawCache *_DrawCache) Clear() {
 
 func (drawCache *_DrawCache) Sort() {
 	sort.SliceStable(*drawCache, func(i, j int) bool {
-		return (*drawCache)[i].Layer > (*drawCache)[j].Layer
+		return (*drawCache)[i].Layer < (*drawCache)[j].Layer
 	})
 }
 
