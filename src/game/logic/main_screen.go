@@ -36,33 +36,35 @@ func (logic *MainScreen) Shut() {
 
 func (logic *MainScreen) Update() {
 	if len(logic.caches) < 1024 {
-		if len(logic.caches) <= 0 {
-			w, h := termbox.Size()
-			c := cache{
-				x:     rand.Intn(w) / 2 * 2,
-				y:     rand.Intn(h),
-				color: termbox.Attribute(rand.Int()%256) + 1,
-			}
-			logic.caches = append(logic.caches, c)
-		} else {
-			c := cache{
-				x:     logic.caches[len(logic.caches)-1].x + (rand.Intn(3)-1)*2,
-				y:     logic.caches[len(logic.caches)-1].y + (rand.Intn(3) - 1),
-				color: termbox.Attribute(rand.Int()%256) + 1,
-			}
-			w, h := termbox.Size()
-			if c.x < 0 {
-				c.x = w - c.x
-			} else if c.x >= w {
-				c.x = c.x - w
-			}
-			if c.y < 0 {
-				c.y = h - 1
-			} else if c.y >= h {
-				c.y = 0
-			}
+		if logic.frameCount%3 == 0 {
+			if len(logic.caches) <= 0 {
+				w, h := termbox.Size()
+				c := cache{
+					x:     rand.Intn(w) / 2 * 2,
+					y:     rand.Intn(h),
+					color: termbox.Attribute(rand.Int()%256) + 1,
+				}
+				logic.caches = append(logic.caches, c)
+			} else {
+				c := cache{
+					x:     logic.caches[len(logic.caches)-1].x + (rand.Intn(3)-1)*2,
+					y:     logic.caches[len(logic.caches)-1].y + (rand.Intn(3) - 1),
+					color: termbox.Attribute(rand.Int()%256) + 1,
+				}
+				w, h := termbox.Size()
+				if c.x < 0 {
+					c.x = w - c.x
+				} else if c.x >= w {
+					c.x = c.x - w
+				}
+				if c.y < 0 {
+					c.y = h - 1
+				} else if c.y >= h {
+					c.y = 0
+				}
 
-			logic.caches = append(logic.caches, c)
+				logic.caches = append(logic.caches, c)
+			}
 		}
 	} else {
 		logic.caches = nil
