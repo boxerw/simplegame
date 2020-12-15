@@ -1,7 +1,6 @@
 package core
 
 import (
-	"github.com/mattn/go-runewidth"
 	"github.com/nsf/termbox-go"
 )
 
@@ -14,7 +13,7 @@ func NewScreen(ctx *Context, logic ...Logic) *Screen {
 
 type Screen struct {
 	_ObjectBase
-	drawCount int
+	drawCache _DrawCache
 }
 
 func (screen *Screen) Destroy() {
@@ -29,10 +28,7 @@ func (screen *Screen) Update() {
 
 	screen.updateObject()
 
-	if screen.drawCount > 0 {
-		termbox.Flush()
-		screen.drawCount = 0
-	}
+	screen.drawCache.Drawing()
 }
 
 func (screen *Screen) init() {
@@ -48,17 +44,45 @@ func (screen *Screen) shut() {
 	termbox.Close()
 }
 
-func (screen *Screen) Draw(x, y int, fg, bg termbox.Attribute, text string) {
-	if len(text) <= 0 {
+func (screen *Screen) DrawMaps(layer, x, y int, maps Maps) {
+	if len(maps) <= 0 {
 		return
 	}
 
-	for _, c := range text {
-		termbox.SetCell(x, y, c, fg, bg)
-		x += runewidth.RuneWidth(c)
-	}
+	screen.drawCache.AddItem(_DrawItem{
+		Layer: layer,
+		X:     x,
+		Y:     y,
+		Maps:  maps,
+	})
+}
 
-	screen.drawCount++
+func (screen *Screen) DrawShape(layer, x, y int, fg, bg termbox.Attribute, shape Shape) {
+	maps := make(Maps, len(shape))
+	for i := 0; i < len(shape); i++ {
+		maps[i] = make([]Pixel, len(shape[i]))
+		for j := 0; j < len(shape[i]); j++ {
+			maps[i][j] = Pixel{
+				FG:   fg,
+				BG:   bg,
+				Char: shape[i][j],
+			}
+		}
+	}
+	screen.DrawMaps(layer, x, y, maps)
+}
+
+func (screen *Screen) DrawText(layer, x, y int, fg, bg termbox.Attribute, text string) {
+	maps := make(Maps, 1)
+	maps[0] = make([]Pixel, len(text))
+	for j, c := range text {
+		maps[0][j] = Pixel{
+			FG:   fg,
+			BG:   bg,
+			Char: c,
+		}
+	}
+	screen.DrawMaps(layer, x, y, maps)
 }
 
 func (screen *Screen) Clear() {

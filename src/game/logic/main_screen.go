@@ -6,8 +6,14 @@ import (
 	. "simple/game/core"
 )
 
+type cache struct {
+	x, y  int
+	color termbox.Attribute
+}
+
 type MainScreen struct {
 	screen *Screen
+	caches []cache
 }
 
 func (logic *MainScreen) Name() string {
@@ -23,9 +29,17 @@ func (logic *MainScreen) Shut() {
 }
 
 func (logic *MainScreen) Update() {
-	w, h := termbox.Size()
-	x := rand.Intn(w) / 2 * 2
-	y := rand.Intn(h)
+	if len(logic.caches) < 300 {
+		w, h := termbox.Size()
+		c := cache{
+			x:     rand.Intn(w) / 2 * 2,
+			y:     rand.Intn(h),
+			color: termbox.Attribute(rand.Int()%256) + 1,
+		}
+		logic.caches = append(logic.caches, c)
+	}
 
-	logic.screen.Draw(x, y, termbox.ColorDefault, termbox.Attribute(rand.Int()%256)+1, "  ")
+	for _, c := range logic.caches {
+		logic.screen.DrawText(0, c.x, c.y, termbox.ColorDefault, c.color, "  ")
+	}
 }
