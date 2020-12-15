@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"fmt"
 	"github.com/nsf/termbox-go"
 	"math/rand"
 	. "simple/game/core"
@@ -13,8 +14,10 @@ type cache struct {
 }
 
 type MainScreen struct {
-	screen *Screen
-	caches []cache
+	screen     *Screen
+	caches     []cache
+	frameCount int
+	beginTime  time.Time
 }
 
 func (logic *MainScreen) Name() string {
@@ -25,6 +28,7 @@ func (logic *MainScreen) Init(object Object) {
 	logic.screen = object.(*Screen)
 	logic.screen.GetContext().SetValue("MainScreen", logic.screen)
 	rand.Seed(time.Now().UnixNano())
+	logic.beginTime = time.Now()
 }
 
 func (logic *MainScreen) Shut() {
@@ -75,6 +79,16 @@ func (logic *MainScreen) Update() {
 	}
 
 	for _, c := range logic.caches {
-		logic.screen.DrawText(0, c.x, c.y, termbox.ColorDefault, c.color, "  ")
+		logic.screen.DrawText(1, c.x, c.y, termbox.ColorDefault, c.color, "  ")
 	}
+
+	logic.frameCount++
+
+	dur := float64(time.Now().Sub(logic.beginTime) / time.Second)
+	if dur <= 0 {
+		dur = 1
+	}
+	frames := float64(logic.frameCount) / dur
+
+	logic.screen.DrawText(0, 0, 0, termbox.ColorWhite, termbox.ColorRed, fmt.Sprintf("帧数：%.2f 长度：%d", frames, len(logic.caches)))
 }
