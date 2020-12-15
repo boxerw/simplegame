@@ -82,5 +82,5 @@ func (logic *MainScreen) Update() {
 	}
 	frames := float64(logic.frameCount) / dur
 
-	logic.screen.DrawText(0, 0, 0, termbox.ColorWhite, termbox.ColorRed, fmt.Sprintf("帧数：%.2f 长度：%d", frames, len(logic.caches)))
+	logic.screen.DrawText(100, 0, 0, termbox.ColorWhite, termbox.ColorRed, fmt.Sprintf("帧数：%.2f 长度：%d", frames, len(logic.caches)))
 }
