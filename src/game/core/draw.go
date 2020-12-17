@@ -7,8 +7,17 @@ import (
 )
 
 type Pixel struct {
-	FG, BG termbox.Attribute
-	Char   rune
+	FG, BG      termbox.Attribute
+	Transparent bool
+	Char        rune
+}
+
+func (p *Pixel) Width() int {
+	w := runewidth.RuneWidth(p.Char)
+	if w <= 0 {
+		w = 1
+	}
+	return w
 }
 
 type Maps [][]Pixel
@@ -40,7 +49,6 @@ func (drawCache *_DrawCache) Drawing(fg, bg termbox.Attribute) {
 	termbox.Clear(fg, bg)
 
 	drawCache.Sort()
-
 	for i := 0; i < len(*drawCache); i++ {
 		item := &(*drawCache)[i]
 
@@ -50,12 +58,14 @@ func (drawCache *_DrawCache) Drawing(fg, bg termbox.Attribute) {
 			for j := 0; j < len(item.Maps[i]); j++ {
 				pixel := &item.Maps[i][j]
 
-				termbox.SetCell(item.X+offsetX, item.Y, pixel.Char, pixel.FG, pixel.BG)
-				offsetX += runewidth.RuneWidth(pixel.Char)
+				if !pixel.Transparent {
+					termbox.SetCell(item.X+offsetX, item.Y, pixel.Char, pixel.FG, pixel.BG)
+				}
+
+				offsetX += pixel.Width()
 			}
 		}
 	}
-
 	drawCache.Clear()
 
 	termbox.Flush()
