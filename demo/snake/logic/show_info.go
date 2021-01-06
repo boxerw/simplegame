@@ -10,13 +10,12 @@ import (
 
 type ShowInfo struct {
 	model.ControllerEventHook
-	screen                                 model.Screen
-	controller                             model.Controller
-	beginTime                              time.Time
-	frameCount                             int
-	keyPressInfo, mousePressInfo           string
-	keyPressInfoClean, mousePressInfoClean *time.Timer
-	hide                                   bool
+	screen                       model.Screen
+	controller                   model.Controller
+	beginTime                    time.Time
+	frameCount                   int
+	keyPressInfo, mousePressInfo string
+	hide                         bool
 }
 
 func (showInfo *ShowInfo) Init(object core.Object, name string) {
@@ -28,6 +27,8 @@ func (showInfo *ShowInfo) Init(object core.Object, name string) {
 	showInfo.screen = screen
 	showInfo.beginTime = time.Now()
 	showInfo.hide = false
+	showInfo.keyPressInfo = "键盘：[]"
+	showInfo.mousePressInfo = "鼠标：[]"
 	showInfo.controller = model.NewController(screen.GetEnvironment())
 	showInfo.controller.AddHook(showInfo)
 }
@@ -72,27 +73,11 @@ func (showInfo *ShowInfo) OnControllerKeyPress(controller model.Controller, key 
 
 	showInfo.keyPressInfo = fmt.Sprintf("键盘：[KEY:%v CH:%v]", key, ch)
 
-	if showInfo.keyPressInfoClean != nil {
-		showInfo.keyPressInfoClean.Reset(5 * time.Second)
-	} else {
-		showInfo.keyPressInfoClean = time.AfterFunc(5*time.Second, func() {
-			showInfo.keyPressInfo = ""
-		})
-	}
-
 	return true
 }
 
 func (showInfo *ShowInfo) OnControllerMousePress(controller model.Controller, key termbox.Key, posi model.Posi2D) bool {
 	showInfo.mousePressInfo = fmt.Sprintf("鼠标：[KEY:%v X:%d Y:%d]", key, posi.GetX(), posi.GetY())
-
-	if showInfo.mousePressInfoClean != nil {
-		showInfo.mousePressInfoClean.Reset(5 * time.Second)
-	} else {
-		showInfo.mousePressInfoClean = time.AfterFunc(5*time.Second, func() {
-			showInfo.mousePressInfo = ""
-		})
-	}
 
 	return true
 }

@@ -17,8 +17,8 @@ func main() {
 	defer scene.Destroy()
 	env.SetValue("mainScene", scene)
 
-	mainExecute := core.NewExecute(30, true, env, screen, scene)
-	env.SetValue("mainExecute", mainExecute)
+	exec := core.NewExecute(30, true, env, screen, scene)
+	env.SetValue("execute", exec)
 
-	defer mainExecute.Start().Wait()
+	defer exec.Start().Wait()
 }

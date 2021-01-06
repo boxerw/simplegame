@@ -33,7 +33,7 @@ func (mainFlow *MainFlow) Update() {
 
 func (mainFlow *MainFlow) OnControllerKeyPress(controller model.Controller, key termbox.Key, ch rune) bool {
 	if ch == 'q' {
-		mainExecute := controller.GetEnvironment().GetValue("mainExecute").(core.Execute)
+		mainExecute := controller.GetEnvironment().GetValue("execute").(core.Execute)
 		mainExecute.Shut()
 	}
 
