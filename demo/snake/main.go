@@ -9,14 +9,16 @@ import (
 func main() {
 	env := core.NewEnvironment()
 
-	screen := model.NewScreen(env)
+	screen := model.NewScreen(env, core.NewComponentBundle("ShowInfo", &logic.ShowInfo{}))
+	defer screen.Destroy()
 	env.SetValue("screen", screen)
 
-	screen.AddComponent(core.NewComponentBundle("ShowInfo", &logic.ShowInfo{}))
+	scene := model.NewScene(env, core.NewComponentBundle("MainFlow", &logic.MainFlow{}))
+	defer scene.Destroy()
+	env.SetValue("mainScene", scene)
 
-	deviceExec := core.NewExecute(60, false, env, screen)
-	env.SetValue("deviceExec", deviceExec)
+	mainExecute := core.NewExecute(30, true, env, screen, scene)
+	env.SetValue("mainExecute", mainExecute)
 
-	wg := deviceExec.Start()
-	defer wg.Wait()
+	defer mainExecute.Start().Wait()
 }
