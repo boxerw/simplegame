@@ -2,7 +2,7 @@ package model
 
 import (
 	"github.com/nsf/termbox-go"
-	"simple/core"
+	"simplegame/core"
 	"unsafe"
 )
 

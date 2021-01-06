@@ -3,8 +3,8 @@ package logic
 import (
 	"fmt"
 	"github.com/nsf/termbox-go"
-	"simple/core"
-	"simple/model"
+	"simplegame/core"
+	"simplegame/model"
 	"time"
 )
 

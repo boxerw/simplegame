@@ -1,8 +1,8 @@
 package model
 
 import (
-	"simple/core"
-	"simple/core/foundation"
+	"simplegame/core"
+	"simplegame/core/foundation"
 )
 
 type Scene interface {

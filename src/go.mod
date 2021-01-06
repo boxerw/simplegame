@@ -1,4 +1,4 @@
-module simple
+module simplegame
 
 go 1.15
 

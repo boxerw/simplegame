@@ -1,6 +1,6 @@
 package core
 
-import "simple/core/foundation"
+import "simplegame/core/foundation"
 
 type Transform2D = foundation.Transform2D
 

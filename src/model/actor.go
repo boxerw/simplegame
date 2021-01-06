@@ -1,7 +1,7 @@
 package model
 
 import (
-	"simple/core"
+	"simplegame/core"
 )
 
 type Actor interface {

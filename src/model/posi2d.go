@@ -2,7 +2,7 @@ package model
 
 import (
 	"math"
-	"simple/core/foundation"
+	"simplegame/core/foundation"
 )
 
 type Posi2D [2]int

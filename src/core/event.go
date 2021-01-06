@@ -1,7 +1,7 @@
 package core
 
 import (
-	"simple/core/foundation"
+	"simplegame/core/foundation"
 	"sort"
 )
 

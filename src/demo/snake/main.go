@@ -1,9 +1,9 @@
 package main
 
 import (
-	"simple/core"
-	"simple/demo/snake/logic"
-	"simple/model"
+	"simplegame/core"
+	"simplegame/demo/snake/logic"
+	"simplegame/model"
 )
 
 func main() {
