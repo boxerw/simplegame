@@ -1,4 +1,4 @@
-package model
+package shell
 
 import (
 	"github.com/mattn/go-runewidth"

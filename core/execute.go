@@ -9,11 +9,10 @@ import (
 
 type Execute = foundation.Execute
 
-func NewExecute(secondFrames int, sync bool, env Environment, objects ...Object) Execute {
+func NewExecute(secondFrames int, sync bool, objects ...Object) Execute {
 	return &_Execute{
 		secondFrames: secondFrames,
 		sync:         sync,
-		env:          env,
 		objects:      objects,
 	}
 }
@@ -21,7 +20,6 @@ func NewExecute(secondFrames int, sync bool, env Environment, objects ...Object)
 type _Execute struct {
 	secondFrames int
 	sync         bool
-	env          Environment
 	objects      []Object
 	mutex        sync.Mutex
 	running      bool
@@ -95,11 +93,10 @@ func (exec *_Execute) RangeObjects(fun func(object Object) bool) {
 	}
 }
 
-func NewQuickExecute(totalFrames int, sync bool, env Environment, objects ...Object) Execute {
+func NewQuickExecute(totalFrames int, sync bool, objects ...Object) Execute {
 	return &_QuickExecute{
 		totalFrames: totalFrames,
 		sync:        sync,
-		env:         env,
 		objects:     objects,
 	}
 }
@@ -107,7 +104,6 @@ func NewQuickExecute(totalFrames int, sync bool, env Environment, objects ...Obj
 type _QuickExecute struct {
 	totalFrames int
 	sync        bool
-	env         Environment
 	objects     []Object
 	mutex       sync.Mutex
 	running     bool

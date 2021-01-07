@@ -1,4 +1,4 @@
-package model
+package shell
 
 import (
 	"github.com/nsf/termbox-go"
@@ -19,7 +19,7 @@ func NewController(env core.Environment, components ...core.ComponentBundle) Con
 		}
 
 		controller.inputChan = make(chan termbox.Event, 100)
-		termboxEx.AddInputEventHook(uintptr(unsafe.Pointer(controller)), controller.inputChan)
+		termboxEx.AddInputEventHook(unsafe.Pointer(controller), controller.inputChan)
 
 	}, components...)
 	return controller
@@ -33,7 +33,7 @@ type _Controller struct {
 
 func (controller *_Controller) Destroy() {
 	controller.ObjectModule.Shut(func() {
-		termboxEx.RemoveInputEventHook(uintptr(unsafe.Pointer(controller)))
+		termboxEx.RemoveInputEventHook(unsafe.Pointer(controller))
 		close(controller.inputChan)
 	})
 }

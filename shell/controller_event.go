@@ -1,8 +1,8 @@
-package model
+package shell
 
 import (
 	"github.com/nsf/termbox-go"
-	"unsafe"
+	"simplegame/core"
 )
 
 type ControllerEvent interface {
@@ -11,14 +11,7 @@ type ControllerEvent interface {
 }
 
 type ControllerEventHook struct {
-}
-
-func (hook *ControllerEventHook) GetHookID() uintptr {
-	return uintptr(unsafe.Pointer(hook))
-}
-
-func (hook *ControllerEventHook) GetPriority() int {
-	return 0
+	core.HookModule
 }
 
 func (hook *ControllerEventHook) OnControllerKeyPress(controller Controller, key termbox.Key, ch rune) bool {

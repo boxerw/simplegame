@@ -3,21 +3,21 @@ package main
 import (
 	"simplegame/core"
 	"simplegame/demo/snake/logic"
-	"simplegame/model"
+	"simplegame/shell"
 )
 
 func main() {
-	env := core.NewEnvironment()
+	env := core.NewEnvironment(0)
 
-	screen := model.NewScreen(env, core.NewComponentBundle("ShowInfo", &logic.ShowInfo{}))
+	screen := shell.NewScreen(env, core.NewComponentBundle("ShowInfo", &logic.ShowInfo{}))
 	defer screen.Destroy()
 	env.SetValue("screen", screen)
 
-	scene := model.NewScene(env, core.NewComponentBundle("MainFlow", &logic.MainFlow{}))
+	scene := shell.NewScene(env, core.NewComponentBundle("MainFlow", &logic.MainFlow{}))
 	defer scene.Destroy()
 	env.SetValue("mainScene", scene)
 
-	exec := core.NewExecute(30, true, env, screen, scene)
+	exec := core.NewExecute(30, true, screen, scene)
 	env.SetValue("execute", exec)
 
 	defer exec.Start().Wait()

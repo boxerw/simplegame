@@ -1,4 +1,4 @@
-package model
+package shell
 
 import (
 	"github.com/nsf/termbox-go"

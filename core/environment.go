@@ -8,8 +8,10 @@ import (
 
 type Environment = foundation.Environment
 
-func NewEnvironment() Environment {
-	return &_Environment{}
+func NewEnvironment(startUID uint64) Environment {
+	return &_Environment{
+		uidMaker: startUID,
+	}
 }
 
 type _Environment struct {

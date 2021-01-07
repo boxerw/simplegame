@@ -1,4 +1,4 @@
-package model
+package shell
 
 import (
 	"github.com/nsf/termbox-go"
@@ -31,7 +31,7 @@ func NewScreen(env core.Environment, components ...core.ComponentBundle) Screen 
 		screen.canvasSize = Posi2D{w, h}
 
 		screen.inputChan = make(chan termbox.Event, 100)
-		termboxEx.AddInputEventHook(uintptr(unsafe.Pointer(screen)), screen.inputChan)
+		termboxEx.AddInputEventHook(unsafe.Pointer(screen), screen.inputChan)
 
 	}, components...)
 	return screen
@@ -48,7 +48,7 @@ type _Screen struct {
 
 func (screen *_Screen) Destroy() {
 	screen.Shut(func() {
-		termboxEx.RemoveInputEventHook(uintptr(unsafe.Pointer(screen)))
+		termboxEx.RemoveInputEventHook(unsafe.Pointer(screen))
 		close(screen.inputChan)
 
 		termboxEx.Shut()

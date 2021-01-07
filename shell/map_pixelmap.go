@@ -1,4 +1,4 @@
-package model
+package shell
 
 type PixelMaps [][]Pixel
 

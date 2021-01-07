@@ -1,4 +1,4 @@
-package model
+package shell
 
 type Vertex struct {
 	Posi  Posi2D

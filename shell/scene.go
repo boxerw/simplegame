@@ -1,4 +1,4 @@
-package model
+package shell
 
 import (
 	"simplegame/core"
@@ -45,7 +45,11 @@ func (scene *_Scene) Update() {
 }
 
 func (scene *_Scene) AddChild(object core.Object) bool {
-	if scene.GetEnvironment() != object.GetEnvironment() || scene.GetDestroyed() || object.GetDisabled() {
+	if scene.GetEnvironment() != object.GetEnvironment() {
+		panic("env invalid")
+	}
+
+	if scene.GetDestroyed() || object.GetDisabled() {
 		return false
 	}
 

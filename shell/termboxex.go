@@ -1,17 +1,18 @@
-package model
+package shell
 
 import (
 	"github.com/nsf/termbox-go"
 	"sync"
+	"unsafe"
 )
 
 var termboxEx = _TermboxEx{
-	inputHookMap: map[uintptr]chan termbox.Event{},
+	inputHookMap: map[unsafe.Pointer]chan termbox.Event{},
 }
 
 type _TermboxEx struct {
 	mutex        sync.Mutex
-	inputHookMap map[uintptr]chan termbox.Event
+	inputHookMap map[unsafe.Pointer]chan termbox.Event
 }
 
 func (ex *_TermboxEx) Init() error {
@@ -73,16 +74,16 @@ func (ex *_TermboxEx) IsInit() bool {
 	return termbox.IsInit
 }
 
-func (ex *_TermboxEx) AddInputEventHook(id uintptr, inputChan chan termbox.Event) {
+func (ex *_TermboxEx) AddInputEventHook(ptr unsafe.Pointer, inputChan chan termbox.Event) {
 	ex.mutex.Lock()
 	defer ex.mutex.Unlock()
 
-	ex.inputHookMap[id] = inputChan
+	ex.inputHookMap[ptr] = inputChan
 }
 
-func (ex *_TermboxEx) RemoveInputEventHook(id uintptr) {
+func (ex *_TermboxEx) RemoveInputEventHook(ptr unsafe.Pointer) {
 	ex.mutex.Lock()
 	defer ex.mutex.Unlock()
 
-	delete(ex.inputHookMap, id)
+	delete(ex.inputHookMap, ptr)
 }

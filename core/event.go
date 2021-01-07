@@ -3,9 +3,20 @@ package core
 import (
 	"simplegame/core/foundation"
 	"sort"
+	"unsafe"
 )
 
 type Hook = foundation.Hook
+
+type HookModule struct{}
+
+func (hookModule *HookModule) GetHookID() uint64 {
+	return uint64(uintptr(unsafe.Pointer(hookModule)))
+}
+
+func (hookModule *HookModule) GetPriority() int {
+	return 0
+}
 
 type Event = foundation.Event
 
@@ -31,7 +42,7 @@ func (eventModule *EventModule) AddHook(hook Hook) {
 	})
 }
 
-func (eventModule *EventModule) RemoveHook(hookID uintptr) {
+func (eventModule *EventModule) RemoveHook(hookID uint64) {
 	for i, hook := range eventModule.hooks {
 		if hook.GetHookID() == hookID {
 			eventModule.hooks = append(eventModule.hooks[:i], eventModule.hooks[i+1:]...)
