@@ -2,7 +2,7 @@ package foundation
 
 type Object interface {
 	Entity
-	Update()
+	Update(frameCtx FrameContext)
 	GetDisabled() bool
 	AddComponent(cb ComponentBundle) bool
 	RemoveComponent(name string)

@@ -72,7 +72,7 @@ func (objModule *ObjectModule) Destroy() {
 	objModule.Shut(nil)
 }
 
-func (objModule *ObjectModule) Update() {
+func (objModule *ObjectModule) Update(frameCtx FrameContext) {
 	if objModule.GetDisabled() {
 		return
 	}
@@ -80,7 +80,7 @@ func (objModule *ObjectModule) Update() {
 	for _, cb := range objModule.components {
 		objModule.ExecFunc(func() bool {
 			if cb.Component != nil {
-				cb.Component.Update()
+				cb.Component.Update(frameCtx)
 			}
 			return true
 		})

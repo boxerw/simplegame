@@ -27,8 +27,8 @@ func (mainFlow *MainFlow) Shut() {
 	mainFlow.controller.Destroy()
 }
 
-func (mainFlow *MainFlow) Update() {
-	mainFlow.controller.Update()
+func (mainFlow *MainFlow) Update(frameCtx core.FrameContext) {
+	mainFlow.controller.Update(frameCtx)
 }
 
 func (mainFlow *MainFlow) OnControllerKeyPress(controller shell.Controller, key termbox.Key, ch rune) bool {

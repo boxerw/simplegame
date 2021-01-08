@@ -55,12 +55,12 @@ func (screen *_Screen) Destroy() {
 	})
 }
 
-func (screen *_Screen) Update() {
+func (screen *_Screen) Update(frameCtx core.FrameContext) {
 	if screen.GetDisabled() {
 		return
 	}
 
-	screen.ObjectModule.Update()
+	screen.ObjectModule.Update(frameCtx)
 
 	func() {
 		for {

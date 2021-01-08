@@ -38,12 +38,12 @@ func (controller *_Controller) Destroy() {
 	})
 }
 
-func (controller *_Controller) Update() {
+func (controller *_Controller) Update(frameCtx core.FrameContext) {
 	if controller.GetDisabled() {
 		return
 	}
 
-	controller.ObjectModule.Update()
+	controller.ObjectModule.Update(frameCtx)
 
 	func() {
 		for {

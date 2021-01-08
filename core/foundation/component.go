@@ -3,7 +3,7 @@ package foundation
 type Component interface {
 	Init(object Object, name string)
 	Shut()
-	Update()
+	Update(frameCtx FrameContext)
 }
 
 type ComponentBundle struct {

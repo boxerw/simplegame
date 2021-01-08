@@ -5,15 +5,12 @@ import (
 	"github.com/nsf/termbox-go"
 	"simplegame/core"
 	"simplegame/shell"
-	"time"
 )
 
 type ShowInfo struct {
 	shell.Screen
 	shell.ControllerEventHook
 	controller                   shell.Controller
-	beginTime                    time.Time
-	frameCount                   int
 	keyPressInfo, mousePressInfo string
 	hide                         bool
 }
@@ -25,7 +22,6 @@ func (showInfo *ShowInfo) Init(object core.Object, name string) {
 	}
 
 	showInfo.Screen = screen
-	showInfo.beginTime = time.Now()
 	showInfo.hide = false
 	showInfo.keyPressInfo = "键盘：[]"
 	showInfo.mousePressInfo = "鼠标：[]"
@@ -37,23 +33,15 @@ func (showInfo *ShowInfo) Shut() {
 	showInfo.controller.Destroy()
 }
 
-func (showInfo *ShowInfo) Update() {
-	showInfo.frameCount++
-
-	dur := float64(time.Now().Sub(showInfo.beginTime) / time.Second)
-	if dur <= 0 {
-		dur = 1
-	}
-	frames := float64(showInfo.frameCount) / dur
-
+func (showInfo *ShowInfo) Update(frameCtx core.FrameContext) {
 	if !showInfo.hide {
 		canvasSize := showInfo.GetCanvasSize()
 		showInfo.DrawText(100, shell.Posi2D{0, 0},
-			fmt.Sprintf("屏幕：[W:%d H:%d]，帧：[%.2f/s]", canvasSize.GetX(), canvasSize.GetY(), frames),
+			fmt.Sprintf("屏幕：[W:%d H:%d]，FPS：[%.2f/s]", canvasSize.GetX(), canvasSize.GetY(), frameCtx.GetFPS()),
 			termbox.ColorWhite, termbox.ColorRed)
 	}
 
-	showInfo.controller.Update()
+	showInfo.controller.Update(frameCtx)
 
 	if !showInfo.hide {
 		showInfo.DrawText(100, shell.Posi2D{0, 1},

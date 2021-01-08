@@ -32,15 +32,15 @@ func (scene *_Scene) Destroy() {
 	})
 }
 
-func (scene *_Scene) Update() {
+func (scene *_Scene) Update(frameCtx core.FrameContext) {
 	if scene.GetDisabled() {
 		return
 	}
 
-	scene.ObjectModule.Update()
+	scene.ObjectModule.Update(frameCtx)
 
 	for _, child := range scene.childList {
-		child.Update()
+		child.Update(frameCtx)
 	}
 }
 
