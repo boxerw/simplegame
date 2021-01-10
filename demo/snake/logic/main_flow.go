@@ -51,7 +51,7 @@ func (mainFlow *MainFlow) Update(frameCtx core.FrameContext) {
 		size := mainFlow.screen.GetCanvasSize()
 		pos := shell.Posi2D{size.GetX()/2 - shell.StringWidth(tips)/2, int(float32(size.GetY()) * 0.8)}
 
-		mainFlow.screen.DrawText(50, pos, tips, termbox.AttrBold|termbox.AttrBlink|termbox.ColorWhite, termbox.ColorLightRed)
+		mainFlow.screen.DrawText(50, pos, tips, termbox.AttrBold|termbox.AttrBlink|termbox.ColorLightGray, termbox.ColorLightBlue)
 
 	case MainFlowStage_Gaming:
 		tips := "按 'q' 键返回"
@@ -59,7 +59,7 @@ func (mainFlow *MainFlow) Update(frameCtx core.FrameContext) {
 		size := mainFlow.screen.GetCanvasSize()
 		pos := shell.Posi2D{size.GetX()/2 - shell.StringWidth(tips)/2, int(float32(size.GetY()) * 0.8)}
 
-		mainFlow.screen.DrawText(50, pos, tips, termbox.AttrBold|termbox.AttrBlink|termbox.ColorWhite, termbox.ColorLightRed)
+		mainFlow.screen.DrawText(50, pos, tips, termbox.AttrBold|termbox.AttrBlink|termbox.ColorLightGray, termbox.ColorLightBlue)
 	}
 }
 
