@@ -38,6 +38,11 @@ func (ex *_TermboxEx) Init() error {
 				func() {
 					ex.mutex.Lock()
 					defer ex.mutex.Unlock()
+
+					if ev.MouseX < 0 {
+						ev.MouseX = 255 - ev.MouseX
+					}
+
 					for _, inputChan := range ex.inputHookMap {
 						select {
 						case inputChan <- ev:
