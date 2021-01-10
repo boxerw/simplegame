@@ -40,7 +40,7 @@ func (ex *_TermboxEx) Init() error {
 					defer ex.mutex.Unlock()
 
 					if ev.MouseX < 0 {
-						ev.MouseX = 255 - ev.MouseX
+						ev.MouseX = 0xff + ev.MouseX
 					}
 
 					for _, inputChan := range ex.inputHookMap {
