@@ -24,7 +24,7 @@ func (p *Pixel) Width() int {
 	return runewidth.RuneWidth(p.Ch)
 }
 
-func (p *Pixel) Overlay(ch rune, fg, bg termbox.Attribute) {
+func (p *Pixel) OverlayCell(ch rune, fg, bg termbox.Attribute) {
 	if p.Transparent.Ch {
 		p.Ch = ch
 	}
@@ -46,8 +46,27 @@ func (p *Pixel) Overlay(ch rune, fg, bg termbox.Attribute) {
 	}
 }
 
-type Maps interface {
-	Range(fun func(posi Posi2D, pixel *Pixel))
-	GetPixel(posi Posi2D) (*Pixel, bool)
-	BlendMaps(posi Posi2D, maps Maps)
+func (p *Pixel) BlendPixel(pixel *Pixel) {
+	t := *pixel
+	t.OverlayCell(p.Ch, p.Bg, p.Fg)
+
+	p.Ch = t.Ch
+	p.Bg = t.Bg
+	p.Fg = t.Fg
+
+	if !t.Transparent.Ch {
+		p.Transparent.Ch = t.Transparent.Ch
+	}
+	if !t.Transparent.Fg {
+		p.Transparent.Fg = t.Transparent.Fg
+	}
+	if !t.Transparent.Bg {
+		p.Transparent.Bg = t.Transparent.Bg
+	}
+	if !t.Transparent.Attr {
+		p.Transparent.Attr = t.Transparent.Attr
+	}
+	if !t.Blend.Attr {
+		p.Blend.Attr = t.Blend.Attr
+	}
 }

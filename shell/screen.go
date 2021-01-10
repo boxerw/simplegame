@@ -86,7 +86,25 @@ func (screen *_Screen) Update(frameCtx core.FrameContext) {
 		}
 	}()
 
+	screen.RangeHooks(func(hook core.Hook) bool {
+		return screen.ExecFunc(func() bool {
+			if hook, ok := hook.(ScreenEvent); ok {
+				return hook.OnBeginDrawing(screen, screen.drawCache)
+			}
+			return true
+		})
+	})
+
 	screen.drawCache.Drawing(screen.canvasFG, screen.canvasBG)
+
+	screen.RangeHooks(func(hook core.Hook) bool {
+		return screen.ExecFunc(func() bool {
+			if hook, ok := hook.(ScreenEvent); ok {
+				return hook.OnEndDrawing(screen)
+			}
+			return true
+		})
+	})
 }
 
 func (screen *_Screen) SetCanvasFGBG(fg, bg termbox.Attribute) {
@@ -137,5 +155,24 @@ func (screen *_Screen) Flush() {
 	if screen.GetDestroyed() {
 		return
 	}
+
+	screen.RangeHooks(func(hook core.Hook) bool {
+		return screen.ExecFunc(func() bool {
+			if hook, ok := hook.(ScreenEvent); ok {
+				return hook.OnBeginDrawing(screen, screen.drawCache)
+			}
+			return true
+		})
+	})
+
 	screen.drawCache.Drawing(screen.canvasFG, screen.canvasBG)
+
+	screen.RangeHooks(func(hook core.Hook) bool {
+		return screen.ExecFunc(func() bool {
+			if hook, ok := hook.(ScreenEvent); ok {
+				return hook.OnEndDrawing(screen)
+			}
+			return true
+		})
+	})
 }

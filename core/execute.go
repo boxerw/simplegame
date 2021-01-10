@@ -51,7 +51,7 @@ func (exec *_Execute) Start() *sync.WaitGroup {
 
 		ticker := time.NewTicker(time.Second / time.Duration(exec.fps))
 
-		for frameCtx.framesCount = 0; ; frameCtx.framesCount++ {
+		for frameCtx.frames = 0; ; frameCtx.frames++ {
 			now := time.Now()
 
 			statInterval := now.Sub(statBeginTime).Seconds()
@@ -164,7 +164,7 @@ func (exec *_QuickExecute) Start() *sync.WaitGroup {
 				}
 
 				frameCtx.lastFrameElapseTime = time.Now().Sub(frameCtx.frameBeginTime)
-				frameCtx.framesCount++
+				frameCtx.frames++
 			}
 		}
 	}
@@ -212,7 +212,7 @@ type _FrameContext struct {
 	DataModule
 	fixedFPS, totalFrames int32
 	statFPS               float32
-	framesCount           uint64
+	frames                uint64
 	frameBeginTime        time.Time
 	lastFrameElapseTime   time.Duration
 }
@@ -229,8 +229,8 @@ func (frameCtx *_FrameContext) GetTotalFrames() int32 {
 	return frameCtx.totalFrames
 }
 
-func (frameCtx *_FrameContext) GetFramesCount() uint64 {
-	return frameCtx.framesCount
+func (frameCtx *_FrameContext) GetFrames() uint64 {
+	return frameCtx.frames
 }
 
 func (frameCtx *_FrameContext) GetCurFrameBeginTime() time.Time {

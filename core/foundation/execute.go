@@ -17,7 +17,7 @@ type FrameContext interface {
 	GetFixedFPS() int32
 	GetFPS() float32
 	GetTotalFrames() int32
-	GetFramesCount() uint64
+	GetFrames() uint64
 	GetCurFrameBeginTime() time.Time
 	GetLastFrameElapseTime() time.Duration
 }

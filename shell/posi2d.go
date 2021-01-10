@@ -2,7 +2,7 @@ package shell
 
 import (
 	"math"
-	"simplegame/core/foundation"
+	"simplegame/core"
 )
 
 type Posi2D [2]int
@@ -23,11 +23,11 @@ func (posi *Posi2D) SetY(v int) {
 	(*posi)[1] = v
 }
 
-func (posi *Posi2D) FromVec(vec foundation.Vec2) {
+func (posi *Posi2D) FromVec(vec core.Vec2) {
 	(*posi)[0] = int(math.Round(float64(vec[0])))
 	(*posi)[1] = int(math.Round(float64(vec[1])))
 }
 
-func (posi *Posi2D) ToVec() foundation.Vec2 {
-	return foundation.Vec2{float32(posi.GetX()), float32(posi.GetY())}
+func (posi *Posi2D) ToVec() core.Vec2 {
+	return core.Vec2{float32(posi.GetX()), float32(posi.GetY())}
 }

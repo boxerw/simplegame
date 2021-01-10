@@ -17,20 +17,26 @@ type DrawItem struct {
 	Text  *Text
 }
 
-type DrawCache []DrawItem
+type DrawCache struct {
+	items []DrawItem
+}
 
 func (drawCache *DrawCache) AddItem(item *DrawItem) {
-	*drawCache = append(*drawCache, *item)
+	drawCache.items = append(drawCache.items, *item)
 }
 
 func (drawCache *DrawCache) Clear() {
-	*drawCache = (*drawCache)[:0]
+	drawCache.items = nil
 }
 
 func (drawCache *DrawCache) Sort() {
-	sort.SliceStable(*drawCache, func(i, j int) bool {
-		return (*drawCache)[i].Layer < (*drawCache)[j].Layer
+	sort.SliceStable(drawCache.items, func(i, j int) bool {
+		return drawCache.items[i].Layer < drawCache.items[j].Layer
 	})
+}
+
+func (drawCache *DrawCache) Size() int {
+	return len(drawCache.items)
 }
 
 func (drawCache *DrawCache) Drawing(fg, bg termbox.Attribute) {
@@ -41,8 +47,8 @@ func (drawCache *DrawCache) Drawing(fg, bg termbox.Attribute) {
 	termbox.Clear(fg, bg)
 
 	drawCache.Sort()
-	for i := 0; i < len(*drawCache); i++ {
-		item := &(*drawCache)[i]
+	for i := 0; i < len(drawCache.items); i++ {
+		item := &drawCache.items[i]
 
 		if item.Maps != nil {
 			item.Maps.Range(func(posi Posi2D, pixel *Pixel) {
@@ -52,12 +58,18 @@ func (drawCache *DrawCache) Drawing(fg, bg termbox.Attribute) {
 
 				x := item.Posi.GetX() + posi.GetX()
 				y := item.Posi.GetY() + posi.GetY()
+
+				w, h := termbox.Size()
+				if x < 0 || y < 0 || x >= w || y >= h {
+					return
+				}
+
 				cell := termbox.GetCell(x, y)
 
-				tPixel := *pixel
-				tPixel.Overlay(cell.Ch, cell.Fg, cell.Bg)
+				t := *pixel
+				t.OverlayCell(cell.Ch, cell.Fg, cell.Bg)
 
-				termbox.SetCell(x, y, tPixel.Ch, tPixel.Fg, tPixel.Bg)
+				termbox.SetCell(x, y, t.Ch, t.Fg, t.Bg)
 			})
 		}
 
@@ -74,7 +86,7 @@ func (drawCache *DrawCache) Drawing(fg, bg termbox.Attribute) {
 					continue
 				}
 
-				tPixel := &Pixel{
+				t := &Pixel{
 					Ch: ch,
 					Fg: item.Text.Fg,
 					Bg: item.Text.Bg,
@@ -83,9 +95,14 @@ func (drawCache *DrawCache) Drawing(fg, bg termbox.Attribute) {
 				x := item.Posi.GetX() + offsetX
 				y := item.Posi.GetY() + offsetY
 
-				termbox.SetCell(x, y, tPixel.Ch, tPixel.Fg, tPixel.Bg)
+				w, h := termbox.Size()
+				if x < 0 || y < 0 || x >= w || y >= h {
+					continue
+				}
 
-				offsetX += tPixel.Width()
+				termbox.SetCell(x, y, t.Ch, t.Fg, t.Bg)
+
+				offsetX += t.Width()
 			}
 		}
 	}
