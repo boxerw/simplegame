@@ -17,9 +17,10 @@ type ShowInfo struct {
 	keyPressInfo, mousePressInfo string
 	hide                         bool
 	frameCtx                     core.FrameContext
-	drawBeginTime                time.Time
-	drawConsumeTime              time.Duration
-	statDrawConsumeBeginTime     time.Time
+	statBeginTime                time.Time
+	statDrawBeginTime            time.Time
+	statDrawConsumeTime          time.Duration
+	statDrawCommit               int
 }
 
 func (showInfo *ShowInfo) Init(object core.Object, name string) {
@@ -35,7 +36,8 @@ func (showInfo *ShowInfo) Init(object core.Object, name string) {
 	showInfo.mousePressInfo = "鼠标：[]"
 	showInfo.controller = shell.NewController(screen.GetEnvironment())
 	showInfo.controller.AddHook(showInfo)
-	showInfo.statDrawConsumeBeginTime = time.Now()
+	showInfo.statBeginTime = time.Now()
+	showInfo.statDrawCommit = 0
 }
 
 func (showInfo *ShowInfo) Shut() {
@@ -63,32 +65,40 @@ func (showInfo *ShowInfo) OnControllerMousePress(controller shell.Controller, ke
 	return true
 }
 
-func (showInfo *ShowInfo) OnBeginDrawing(screen shell.Screen, drawCache shell.DrawCache) bool {
+func (showInfo *ShowInfo) OnBeginDrawing(screen shell.Screen) bool {
 	if showInfo.frameCtx == nil {
 		return true
+	}
+
+	if showInfo.statDrawCommit < screen.GetDrawCache().Size() {
+		showInfo.statDrawCommit = screen.GetDrawCache().Size()
 	}
 
 	if !showInfo.hide {
 		canvasSize := showInfo.GetCanvasSize()
 		showInfo.DrawText(100, shell.Posi2D{0, 0},
-			fmt.Sprintf("屏幕：[W:%d H:%d]，提交：[%d]，耗时：[%dms]，FPS：[%.2f/s]",
+			fmt.Sprintf("屏幕：[W:%d H:%d FPS：%.2f/s]",
 				canvasSize.GetX(),
 				canvasSize.GetY(),
-				drawCache.Size(),
-				showInfo.drawConsumeTime.Milliseconds(),
 				showInfo.frameCtx.GetFPS()),
 			termbox.ColorWhite, termbox.ColorRed)
 
 		showInfo.DrawText(100, shell.Posi2D{0, 1},
-			showInfo.keyPressInfo,
+			fmt.Sprintf("渲染：[提交：%d 消耗：%dms]",
+				showInfo.statDrawCommit,
+				showInfo.statDrawConsumeTime.Milliseconds()),
 			termbox.ColorWhite, termbox.ColorRed)
 
 		showInfo.DrawText(100, shell.Posi2D{0, 2},
+			showInfo.keyPressInfo,
+			termbox.ColorWhite, termbox.ColorRed)
+
+		showInfo.DrawText(100, shell.Posi2D{0, 3},
 			showInfo.mousePressInfo,
 			termbox.ColorWhite, termbox.ColorRed)
 	}
 
-	showInfo.drawBeginTime = time.Now()
+	showInfo.statDrawBeginTime = time.Now()
 
 	return true
 }
@@ -96,14 +106,15 @@ func (showInfo *ShowInfo) OnBeginDrawing(screen shell.Screen, drawCache shell.Dr
 func (showInfo *ShowInfo) OnEndDrawing(screen shell.Screen) bool {
 	now := time.Now()
 
-	delta := now.Sub(showInfo.drawBeginTime)
-	if delta > showInfo.drawConsumeTime {
-		showInfo.drawConsumeTime = delta
+	delta := now.Sub(showInfo.statDrawBeginTime)
+	if delta > showInfo.statDrawConsumeTime {
+		showInfo.statDrawConsumeTime = delta
 	}
 
-	if now.Sub(showInfo.statDrawConsumeBeginTime).Seconds() > 3 {
-		showInfo.statDrawConsumeBeginTime = now
-		showInfo.drawConsumeTime = 0
+	if now.Sub(showInfo.statBeginTime).Seconds() > 1 {
+		showInfo.statBeginTime = now
+		showInfo.statDrawConsumeTime = 0
+		showInfo.statDrawCommit = 0
 	}
 
 	return true

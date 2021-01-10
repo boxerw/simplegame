@@ -12,6 +12,7 @@ type Screen interface {
 	SetCanvasFGBG(fg, bg termbox.Attribute)
 	GetCanvasFGBG() (fg, bg termbox.Attribute)
 	GetCanvasSize() Posi2D
+	GetDrawCache() DrawCache
 	DrawMaps(layer int, posi Posi2D, maps Maps)
 	DrawText(layer int, posi Posi2D, text string, fg, bg termbox.Attribute)
 	Flush()
@@ -32,6 +33,8 @@ func NewScreen(env core.Environment, components ...core.ComponentBundle) Screen 
 
 		screen.inputChan = make(chan termbox.Event, 100)
 		termboxEx.AddInputEventHook(unsafe.Pointer(screen), screen.inputChan)
+
+		screen.drawCache = NewDrawCache()
 
 	}, components...)
 	return screen
@@ -89,7 +92,7 @@ func (screen *_Screen) Update(frameCtx core.FrameContext) {
 	screen.RangeHooks(func(hook core.Hook) bool {
 		return screen.ExecFunc(func() bool {
 			if hook, ok := hook.(ScreenEvent); ok {
-				return hook.OnBeginDrawing(screen, screen.drawCache)
+				return hook.OnBeginDrawing(screen)
 			}
 			return true
 		})
@@ -121,6 +124,10 @@ func (screen *_Screen) GetCanvasFGBG() (fg, bg termbox.Attribute) {
 
 func (screen *_Screen) GetCanvasSize() Posi2D {
 	return screen.canvasSize
+}
+
+func (screen *_Screen) GetDrawCache() DrawCache {
+	return screen.drawCache
 }
 
 func (screen *_Screen) DrawMaps(layer int, posi Posi2D, maps Maps) {
@@ -159,7 +166,7 @@ func (screen *_Screen) Flush() {
 	screen.RangeHooks(func(hook core.Hook) bool {
 		return screen.ExecFunc(func() bool {
 			if hook, ok := hook.(ScreenEvent); ok {
-				return hook.OnBeginDrawing(screen, screen.drawCache)
+				return hook.OnBeginDrawing(screen)
 			}
 			return true
 		})

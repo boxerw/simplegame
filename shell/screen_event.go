@@ -4,7 +4,7 @@ import "simplegame/core"
 
 type ScreenEvent interface {
 	OnScreenCanvasSizeChange(screen Screen, oldSize, newSize Posi2D) bool
-	OnBeginDrawing(screen Screen, drawCache DrawCache) bool
+	OnBeginDrawing(screen Screen) bool
 	OnEndDrawing(screen Screen) bool
 }
 
@@ -16,7 +16,7 @@ func (hook *ScreenEventHook) OnScreenCanvasSizeChange(screen Screen, oldSize, ne
 	return true
 }
 
-func (hook *ScreenEventHook) OnBeginDrawing(screen Screen, drawCache DrawCache) bool {
+func (hook *ScreenEventHook) OnBeginDrawing(screen Screen) bool {
 	return true
 }
 

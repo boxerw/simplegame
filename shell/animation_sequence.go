@@ -1,8 +1,8 @@
 package shell
 
 type SequenceAnimationFrame struct {
-	Frame int32
-	Maps  Maps
+	BeginFrame, EndFrame int32
+	Maps                 Maps
 }
 
 type SequenceAnimation struct {
@@ -16,17 +16,14 @@ func (ani *SequenceAnimation) GetFrameMaps(frame int32) (Maps, bool) {
 		return nil, false
 	}
 
-	for i := len(ani.FrameList) - 1; i >= 0; i-- {
-		if frame < ani.FrameList[i].Frame {
+	for i := 0; i < len(ani.FrameList); i++ {
+		frameData := &ani.FrameList[i]
+
+		if frame < frameData.BeginFrame || frame > frameData.EndFrame {
 			continue
 		}
 
-		cur := i
-		if cur < len(ani.FrameList)-1 {
-			cur++
-		}
-
-		return ani.FrameList[cur].Maps, true
+		return ani.FrameList[i].Maps, true
 	}
 
 	return nil, false
@@ -38,12 +35,4 @@ func (ani *SequenceAnimation) GetTotalFrames() int32 {
 
 func (ani *SequenceAnimation) GetFixedFPS() int32 {
 	return ani.FixedFPS
-}
-
-func (ani *SequenceAnimation) Marshal() ([]byte, error) {
-	return nil, nil
-}
-
-func (ani *SequenceAnimation) Unmarshal(data []byte) error {
-	return nil
 }

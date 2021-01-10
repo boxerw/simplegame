@@ -17,29 +17,41 @@ type DrawItem struct {
 	Text  *Text
 }
 
-type DrawCache struct {
+type DrawCache interface {
+	AddItem(item *DrawItem)
+	Clear()
+	Sort()
+	Size() int
+	Drawing(fg, bg termbox.Attribute)
+}
+
+func NewDrawCache() DrawCache {
+	return &_DrawCache{}
+}
+
+type _DrawCache struct {
 	items []DrawItem
 }
 
-func (drawCache *DrawCache) AddItem(item *DrawItem) {
+func (drawCache *_DrawCache) AddItem(item *DrawItem) {
 	drawCache.items = append(drawCache.items, *item)
 }
 
-func (drawCache *DrawCache) Clear() {
+func (drawCache *_DrawCache) Clear() {
 	drawCache.items = nil
 }
 
-func (drawCache *DrawCache) Sort() {
+func (drawCache *_DrawCache) Sort() {
 	sort.SliceStable(drawCache.items, func(i, j int) bool {
 		return drawCache.items[i].Layer < drawCache.items[j].Layer
 	})
 }
 
-func (drawCache *DrawCache) Size() int {
+func (drawCache *_DrawCache) Size() int {
 	return len(drawCache.items)
 }
 
-func (drawCache *DrawCache) Drawing(fg, bg termbox.Attribute) {
+func (drawCache *_DrawCache) Drawing(fg, bg termbox.Attribute) {
 	if !termboxEx.IsInit() {
 		return
 	}

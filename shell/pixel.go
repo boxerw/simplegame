@@ -5,6 +5,10 @@ import (
 	"github.com/nsf/termbox-go"
 )
 
+var StringWidth = runewidth.StringWidth
+
+var RuneWidth = runewidth.RuneWidth
+
 type Transparent struct {
 	Ch, Fg, Bg, Attr bool
 }
@@ -21,7 +25,7 @@ type Pixel struct {
 }
 
 func (p *Pixel) Width() int {
-	return runewidth.RuneWidth(p.Ch)
+	return RuneWidth(p.Ch)
 }
 
 func (p *Pixel) OverlayCell(ch rune, fg, bg termbox.Attribute) {
