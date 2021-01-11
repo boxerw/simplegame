@@ -19,15 +19,15 @@ const (
 
 type Snake struct {
 	shell.Atom
-	screen shell.Screen
+	screen    shell.Screen
+	moveTime  time.Time
+	bodyMaps  shell.VertexMaps
+	noInitPos bool
 
 	Direction    SnakeDirection
 	MoveInterval time.Duration
 	Length       int
 	Color        termbox.Attribute
-
-	moveTime time.Time
-	maps     shell.VertexMaps
 }
 
 func (snake *Snake) Init(object core.Object, name string) {
@@ -47,16 +47,18 @@ func (snake *Snake) Update(frameCtx core.FrameContext) {
 	var pos shell.Posi2D
 	pos.FromVec(snake.GetPosi())
 
-	delta := shell.Posi2D{pos.GetX() - snake.maps.List[0].Posi.GetX(), pos.GetY() - snake.maps.List[0].Posi.GetY()}
+	delta := shell.Posi2D{pos.GetX() - snake.bodyMaps.List[0].Posi.GetX(), pos.GetY() - snake.bodyMaps.List[0].Posi.GetY()}
 
-	for i := 0; i < len(snake.maps.List); i++ {
-		v := &snake.maps.List[i]
+	for i := 0; i < len(snake.bodyMaps.List); i++ {
+		v := &snake.bodyMaps.List[i]
 		if i <= 0 {
 			v.Posi = pos
 		} else {
 			v.Posi = shell.Posi2D{v.Posi.GetX() + delta.GetX(), v.Posi.GetY() + delta.GetY()}
 		}
 	}
+
+	snake.noInitPos = false
 
 	if time.Now().Sub(snake.moveTime) > snake.MoveInterval {
 		switch snake.Direction {
@@ -72,7 +74,7 @@ func (snake *Snake) Update(frameCtx core.FrameContext) {
 
 		snake.moveTime = time.Now()
 
-		head := &snake.maps.List[0]
+		head := &snake.bodyMaps.List[0]
 		head.Pixel.Ch = '*'
 		head.Pixel.Fg = snake.Color
 
@@ -82,12 +84,12 @@ func (snake *Snake) Update(frameCtx core.FrameContext) {
 		newHead.Pixel.Transparent.Bg = true
 		newHead.Posi.FromVec(snake.GetPosi())
 
-		t := snake.maps.List[:len(snake.maps.List)-1]
-		snake.maps.List = append([]shell.Vertex{}, newHead)
-		snake.maps.List = append(snake.maps.List, t...)
+		t := snake.bodyMaps.List[:len(snake.bodyMaps.List)-1]
+		snake.bodyMaps.List = append([]shell.Vertex{}, newHead)
+		snake.bodyMaps.List = append(snake.bodyMaps.List, t...)
 	}
 
-	snake.screen.DrawMaps(10, shell.Posi2D{}, &snake.maps)
+	snake.screen.DrawMaps(10, shell.Posi2D{}, &snake.bodyMaps)
 }
 
 func (snake *Snake) Reset() {
@@ -96,10 +98,11 @@ func (snake *Snake) Reset() {
 	}
 
 	snake.moveTime = time.Now()
+	snake.noInitPos = true
 
-	snake.maps.List = make([]shell.Vertex, snake.Length)
-	for i := 0; i < len(snake.maps.List); i++ {
-		v := &snake.maps.List[i]
+	snake.bodyMaps.List = make([]shell.Vertex, snake.Length)
+	for i := 0; i < len(snake.bodyMaps.List); i++ {
+		v := &snake.bodyMaps.List[i]
 
 		if i <= 0 {
 			v.Pixel.Ch = '@'
@@ -120,5 +123,33 @@ func (snake *Snake) Reset() {
 		}
 
 		v.Pixel.Transparent.Bg = true
+	}
+}
+
+func (snake *Snake) ExtendBody(num int) {
+	for i := 0; i < num; i++ {
+		v := shell.Vertex{}
+		v.Pixel.Transparent.Fg = true
+		v.Pixel.Transparent.Bg = true
+		v.Pixel.Transparent.Ch = true
+		v.Pixel.Transparent.Attr = true
+		v.Posi = snake.bodyMaps.List[len(snake.bodyMaps.List)-1].Posi
+
+		snake.bodyMaps.List = append(snake.bodyMaps.List, v)
+	}
+
+	snake.Length = len(snake.bodyMaps.List)
+}
+
+func (snake *Snake) RangeBody(fun func(posi shell.Posi2D) bool) {
+	if fun == nil || snake.noInitPos {
+		return
+	}
+
+	for i := 1; i < len(snake.bodyMaps.List); i++ {
+		v := &snake.bodyMaps.List[i]
+		if !fun(v.Posi) {
+			return
+		}
 	}
 }
