@@ -31,11 +31,14 @@ func (showInfo *ShowInfo) Init(object core.Object, name string) {
 
 	showInfo.Screen = screen
 	showInfo.Screen.AddHook(showInfo)
-	showInfo.hide = false
-	showInfo.keyPressInfo = "键盘：[]"
-	showInfo.mousePressInfo = "鼠标：[]"
+
 	showInfo.controller = shell.NewController(screen.GetEnvironment())
 	showInfo.controller.AddHook(showInfo)
+
+	showInfo.hide = true
+	showInfo.keyPressInfo = "键盘：[]"
+	showInfo.mousePressInfo = "鼠标：[]"
+
 	showInfo.statBeginTime = time.Now()
 	showInfo.statDrawCommit = 0
 }

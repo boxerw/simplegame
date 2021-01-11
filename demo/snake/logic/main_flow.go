@@ -29,9 +29,12 @@ func (mainFlow *MainFlow) Init(object core.Object, name string) {
 	}
 
 	mainFlow.Scene = scene
+
 	mainFlow.controller = shell.NewController(scene.GetEnvironment())
 	mainFlow.controller.AddHook(mainFlow)
+
 	mainFlow.screen = mainFlow.GetEnvironment().GetValue("screen").(shell.Screen)
+	mainFlow.stage = MainFlowStage_Init
 }
 
 func (mainFlow *MainFlow) Shut() {
@@ -46,20 +49,20 @@ func (mainFlow *MainFlow) Update(frameCtx core.FrameContext) {
 		mainFlow.SwitchStage(MainFlowStage_Cover)
 
 	case MainFlowStage_Cover:
-		tips := "按 'q' 键退出"
+		tips := "按'q'键退出，按其他任意键进入游戏"
 
 		size := mainFlow.screen.GetCanvasSize()
 		pos := shell.Posi2D{size.GetX()/2 - shell.StringWidth(tips)/2, int(float32(size.GetY()) * 0.8)}
 
-		mainFlow.screen.DrawText(50, pos, tips, termbox.AttrBold|termbox.AttrBlink|termbox.ColorLightGray, termbox.ColorLightBlue)
+		mainFlow.screen.DrawText(50, pos, tips, termbox.AttrBlink|termbox.ColorLightGray, termbox.ColorBlue)
 
 	case MainFlowStage_Gaming:
-		tips := "按 'q' 键返回"
+		tips := "按'q'键返回"
 
 		size := mainFlow.screen.GetCanvasSize()
 		pos := shell.Posi2D{size.GetX()/2 - shell.StringWidth(tips)/2, int(float32(size.GetY()) * 0.8)}
 
-		mainFlow.screen.DrawText(50, pos, tips, termbox.AttrBold|termbox.AttrBlink|termbox.ColorLightGray, termbox.ColorLightBlue)
+		mainFlow.screen.DrawText(50, pos, tips, termbox.AttrBlink|termbox.ColorLightGray, termbox.ColorBlue)
 	}
 }
 
@@ -68,6 +71,8 @@ func (mainFlow *MainFlow) OnControllerKeyPress(controller shell.Controller, key 
 	case MainFlowStage_Cover:
 		if 'q' == ch {
 			mainFlow.GetEnvironment().GetValue("execute").(core.Execute).Shut()
+		} else {
+			mainFlow.SwitchStage(MainFlowStage_Gaming)
 		}
 	case MainFlowStage_Gaming:
 		if 'q' == ch {
