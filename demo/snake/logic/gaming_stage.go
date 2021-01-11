@@ -109,22 +109,11 @@ func (gamingStage *GamingStage) Reset() {
 	}
 	gamingStage.fruitObjList = nil
 
-	color := termbox.Attribute(rand.Intn(int(termbox.ColorLightGray + 1)))
-
-	fg, bg := gamingStage.screen.GetCanvasFGBG()
-	if color == fg {
-		color++
-	}
-	if color == bg {
-		color++
-	}
-	color %= termbox.ColorLightGray + 1
-
 	snake := shell.NewAtom(gamingStage.GetEnvironment(), core.NewComponentBundle("GameObj", &gameobj.Snake{
 		Direction:    gameobj.SnakeDirection(rand.Intn(int(gameobj.SnakeDirection_Count))),
 		MoveInterval: 800 * time.Millisecond,
 		Length:       10,
-		Color:        color,
+		Color:        termbox.ColorLightGray,
 	}))
 	gamingStage.AddChild(snake)
 

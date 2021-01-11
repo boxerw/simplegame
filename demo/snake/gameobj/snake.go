@@ -78,7 +78,7 @@ func (snake *Snake) Update(frameCtx core.FrameContext) {
 
 		newHead := shell.Vertex{}
 		newHead.Pixel.Ch = '@'
-		newHead.Pixel.Fg = termbox.AttrBlink | snake.Color
+		newHead.Pixel.Fg = snake.Color
 		newHead.Pixel.Transparent.Bg = true
 		newHead.Posi.FromVec(snake.GetPosi())
 
@@ -103,7 +103,7 @@ func (snake *Snake) Reset() {
 
 		if i <= 0 {
 			v.Pixel.Ch = '@'
-			v.Pixel.Fg = termbox.AttrBlink | snake.Color
+			v.Pixel.Fg = snake.Color
 		} else {
 			switch snake.Direction {
 			case SnakeDirection_Up:
