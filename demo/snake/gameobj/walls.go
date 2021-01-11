@@ -22,7 +22,5 @@ func (walls *Walls) Update(frameCtx core.FrameContext) {
 }
 
 func (walls *Walls) RandWall(num int) {
-	for i := 0; i < num; i++ {
-		walls.wallList = append()
-	}
+
 }

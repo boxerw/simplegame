@@ -1,12 +1,16 @@
 package main
 
 import (
+	"math/rand"
 	"simplegame/core"
 	"simplegame/demo/snake/logic"
 	"simplegame/shell"
+	"time"
 )
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
+
 	env := core.NewEnvironment(0)
 
 	screen := shell.NewScreen(env, core.NewComponentBundle("ShowInfo", &logic.ShowInfo{}))

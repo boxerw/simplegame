@@ -47,22 +47,6 @@ func (mainFlow *MainFlow) Update(frameCtx core.FrameContext) {
 	switch mainFlow.stage {
 	case MainFlowStage_Init:
 		mainFlow.SwitchStage(MainFlowStage_Cover)
-
-	case MainFlowStage_Cover:
-		tips := "按'q'键退出，按其他任意键进入游戏"
-
-		size := mainFlow.screen.GetCanvasSize()
-		pos := shell.Posi2D{size.GetX()/2 - shell.StringWidth(tips)/2, int(float32(size.GetY()) * 0.8)}
-
-		mainFlow.screen.DrawText(50, pos, tips, termbox.AttrBlink|termbox.ColorLightGray, termbox.ColorBlue)
-
-	case MainFlowStage_Gaming:
-		tips := "按'q'键返回"
-
-		size := mainFlow.screen.GetCanvasSize()
-		pos := shell.Posi2D{size.GetX()/2 - shell.StringWidth(tips)/2, int(float32(size.GetY()) * 0.8)}
-
-		mainFlow.screen.DrawText(50, pos, tips, termbox.AttrBlink|termbox.ColorLightGray, termbox.ColorBlue)
 	}
 }
 
