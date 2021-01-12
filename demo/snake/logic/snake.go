@@ -2,8 +2,8 @@ package logic
 
 import (
 	"github.com/nsf/termbox-go"
+	"simplegame/client"
 	"simplegame/core"
-	"simplegame/shell"
 	"time"
 )
 
@@ -18,10 +18,10 @@ const (
 )
 
 type Snake struct {
-	shell.Atom
-	screen    shell.Screen
+	client.Atom
+	screen    client.Screen
 	moveTime  time.Time
-	bodyMaps  shell.VertexMaps
+	bodyMaps  client.VertexMaps
 	noInitPos bool
 
 	Direction    SnakeDirection
@@ -31,8 +31,8 @@ type Snake struct {
 }
 
 func (snake *Snake) Init(object core.Object, name string) {
-	snake.Atom = object.(shell.Atom)
-	snake.screen = snake.GetEnvironment().GetValue("screen").(shell.Screen)
+	snake.Atom = object.(client.Atom)
+	snake.screen = snake.GetEnvironment().GetValue("screen").(client.Screen)
 	snake.Reset()
 }
 
@@ -44,17 +44,17 @@ func (snake *Snake) Update(frameCtx core.FrameContext) {
 		return
 	}
 
-	var pos shell.Posi2D
+	var pos client.Posi2D
 	pos.FromVec(snake.GetPosi())
 
-	delta := shell.Posi2D{pos.GetX() - snake.bodyMaps.List[0].Posi.GetX(), pos.GetY() - snake.bodyMaps.List[0].Posi.GetY()}
+	delta := client.Posi2D{pos.GetX() - snake.bodyMaps.List[0].Posi.GetX(), pos.GetY() - snake.bodyMaps.List[0].Posi.GetY()}
 
 	for i := 0; i < len(snake.bodyMaps.List); i++ {
 		v := &snake.bodyMaps.List[i]
 		if i <= 0 {
 			v.Posi = pos
 		} else {
-			v.Posi = shell.Posi2D{v.Posi.GetX() + delta.GetX(), v.Posi.GetY() + delta.GetY()}
+			v.Posi = client.Posi2D{v.Posi.GetX() + delta.GetX(), v.Posi.GetY() + delta.GetY()}
 		}
 	}
 
@@ -78,18 +78,18 @@ func (snake *Snake) Update(frameCtx core.FrameContext) {
 		head.Pixel.Ch = '*'
 		head.Pixel.Fg = snake.Color
 
-		newHead := shell.Vertex{}
+		newHead := client.Vertex{}
 		newHead.Pixel.Ch = '@'
 		newHead.Pixel.Fg = snake.Color
 		newHead.Pixel.Transparent.Bg = true
 		newHead.Posi.FromVec(snake.GetPosi())
 
 		t := snake.bodyMaps.List[:len(snake.bodyMaps.List)-1]
-		snake.bodyMaps.List = append([]shell.Vertex{}, newHead)
+		snake.bodyMaps.List = append([]client.Vertex{}, newHead)
 		snake.bodyMaps.List = append(snake.bodyMaps.List, t...)
 	}
 
-	snake.screen.DrawMaps(10, shell.Posi2D{}, &snake.bodyMaps)
+	snake.screen.DrawMaps(10, client.Posi2D{}, &snake.bodyMaps)
 }
 
 func (snake *Snake) Reset() {
@@ -100,7 +100,7 @@ func (snake *Snake) Reset() {
 	snake.moveTime = time.Now()
 	snake.noInitPos = true
 
-	snake.bodyMaps.List = make([]shell.Vertex, snake.Length)
+	snake.bodyMaps.List = make([]client.Vertex, snake.Length)
 	for i := 0; i < len(snake.bodyMaps.List); i++ {
 		v := &snake.bodyMaps.List[i]
 
@@ -128,7 +128,7 @@ func (snake *Snake) Reset() {
 
 func (snake *Snake) ExtendBody(num int) {
 	for i := 0; i < num; i++ {
-		v := shell.Vertex{}
+		v := client.Vertex{}
 		v.Pixel.Transparent.Fg = true
 		v.Pixel.Transparent.Bg = true
 		v.Pixel.Transparent.Ch = true
@@ -141,7 +141,7 @@ func (snake *Snake) ExtendBody(num int) {
 	snake.Length = len(snake.bodyMaps.List)
 }
 
-func (snake *Snake) RangeBody(fun func(posi shell.Posi2D) bool) {
+func (snake *Snake) RangeBody(fun func(posi client.Posi2D) bool) {
 	if fun == nil || snake.noInitPos {
 		return
 	}

@@ -1,4 +1,4 @@
-package shell
+package client
 
 type Animation interface {
 	GetFrameMaps(frame int32) (Maps, bool)

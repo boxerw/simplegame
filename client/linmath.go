@@ -1,4 +1,4 @@
-package shell
+package client
 
 import (
 	"github.com/ungerik/go3d/vec2"

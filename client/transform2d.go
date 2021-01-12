@@ -1,4 +1,4 @@
-package shell
+package client
 
 type Transform2D interface {
 	GetPosi() Vec2

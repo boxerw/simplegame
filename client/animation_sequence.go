@@ -1,4 +1,4 @@
-package shell
+package client
 
 type SequenceAnimationFrame struct {
 	BeginFrame, EndFrame int32

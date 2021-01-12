@@ -2,9 +2,9 @@ package main
 
 import (
 	"math/rand"
+	"simplegame/client"
 	"simplegame/core"
 	"simplegame/demo/snake/logic"
-	"simplegame/shell"
 	"time"
 )
 
@@ -13,11 +13,11 @@ func main() {
 
 	env := core.NewEnvironment(0)
 
-	screen := shell.NewScreen(env, core.NewComponentBundle("ShowInfo", &logic.ShowInfo{}))
+	screen := client.NewScreen(env, core.NewComponentBundle("ShowInfo", &logic.ShowInfo{}))
 	defer screen.Destroy()
 	env.SetValue("screen", screen)
 
-	scene := shell.NewScene(env, core.NewComponentBundle("MainFlow", &logic.MainFlow{}))
+	scene := client.NewScene(env, core.NewComponentBundle("MainFlow", &logic.MainFlow{}))
 	defer scene.Destroy()
 	env.SetValue("scene", scene)
 

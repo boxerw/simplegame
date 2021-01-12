@@ -2,8 +2,8 @@ package logic
 
 import (
 	"github.com/nsf/termbox-go"
+	"simplegame/client"
 	"simplegame/core"
-	"simplegame/shell"
 )
 
 type MainFlowStage int
@@ -15,25 +15,25 @@ const (
 )
 
 type MainFlow struct {
-	shell.Scene
-	shell.ControllerEventHook
-	controller shell.Controller
-	screen     shell.Screen
+	client.Scene
+	client.ControllerEventHook
+	controller client.Controller
+	screen     client.Screen
 	stage      MainFlowStage
 }
 
 func (mainFlow *MainFlow) Init(object core.Object, name string) {
-	scene, ok := object.(shell.Scene)
+	scene, ok := object.(client.Scene)
 	if !ok {
 		panic("not scene")
 	}
 
 	mainFlow.Scene = scene
 
-	mainFlow.controller = shell.NewController(scene.GetEnvironment())
+	mainFlow.controller = client.NewController(scene.GetEnvironment())
 	mainFlow.controller.AddHook(mainFlow)
 
-	mainFlow.screen = mainFlow.GetEnvironment().GetValue("screen").(shell.Screen)
+	mainFlow.screen = mainFlow.GetEnvironment().GetValue("screen").(client.Screen)
 	mainFlow.stage = MainFlowStage_Init
 }
 
@@ -50,7 +50,7 @@ func (mainFlow *MainFlow) Update(frameCtx core.FrameContext) {
 	}
 }
 
-func (mainFlow *MainFlow) OnControllerKeyPress(controller shell.Controller, key termbox.Key, ch rune) bool {
+func (mainFlow *MainFlow) OnControllerKeyPress(controller client.Controller, key termbox.Key, ch rune) bool {
 	switch mainFlow.stage {
 	case MainFlowStage_Cover:
 		if 'q' == ch {

@@ -1,4 +1,4 @@
-package shell
+package client
 
 type Serializable interface {
 	Marshal() ([]byte, error)

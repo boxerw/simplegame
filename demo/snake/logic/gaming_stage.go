@@ -3,27 +3,27 @@ package logic
 import (
 	"github.com/nsf/termbox-go"
 	"math/rand"
+	"simplegame/client"
 	"simplegame/core"
-	"simplegame/shell"
 	"time"
 )
 
 type GamingStage struct {
-	shell.Scene
-	shell.ControllerEventHook
-	screen     shell.Screen
-	controller shell.Controller
+	client.Scene
+	client.ControllerEventHook
+	screen     client.Screen
+	controller client.Controller
 	snakeObj   *Snake
 	itemsObj   *Items
 }
 
 func (gamingStage *GamingStage) Init(object core.Object, name string) {
-	gamingStage.Scene = object.(shell.Scene)
+	gamingStage.Scene = object.(client.Scene)
 
-	gamingStage.screen = gamingStage.GetEnvironment().GetValue("screen").(shell.Screen)
+	gamingStage.screen = gamingStage.GetEnvironment().GetValue("screen").(client.Screen)
 	gamingStage.screen.SetCanvasFGBG(termbox.ColorWhite, termbox.ColorBlack)
 
-	gamingStage.controller = shell.NewController(object.GetEnvironment())
+	gamingStage.controller = client.NewController(object.GetEnvironment())
 	gamingStage.controller.AddHook(gamingStage)
 
 	gamingStage.Reset()
@@ -47,7 +47,7 @@ func (gamingStage *GamingStage) Update(frameCtx core.FrameContext) {
 	tips := "按'q'键返回，按'w'键加速，按's'键减速"
 
 	size := gamingStage.screen.GetCanvasSize()
-	pos := shell.Posi2D{size.GetX()/2 - shell.StringWidth(tips)/2, int(float32(size.GetY()) * 0.8)}
+	pos := client.Posi2D{size.GetX()/2 - client.StringWidth(tips)/2, int(float32(size.GetY()) * 0.8)}
 
 	gamingStage.screen.DrawText(50, pos, tips, termbox.AttrBlink|termbox.ColorLightGray, termbox.ColorBlue)
 
@@ -63,7 +63,7 @@ func (gamingStage *GamingStage) Update(frameCtx core.FrameContext) {
 	}
 }
 
-func (gamingStage *GamingStage) OnControllerKeyPress(controller shell.Controller, key termbox.Key, ch rune) bool {
+func (gamingStage *GamingStage) OnControllerKeyPress(controller client.Controller, key termbox.Key, ch rune) bool {
 	if gamingStage.snakeObj == nil {
 		return true
 	}
@@ -105,7 +105,7 @@ func (gamingStage *GamingStage) Reset() {
 	gamingStage.screen.SetCanvasFGBG(termbox.ColorWhite, termbox.ColorBlack)
 
 	if gamingStage.snakeObj == nil {
-		snake := shell.NewAtom(gamingStage.GetEnvironment(), core.NewComponentBundle("GameObj", &Snake{
+		snake := client.NewAtom(gamingStage.GetEnvironment(), core.NewComponentBundle("GameObj", &Snake{
 			Direction:    SnakeDirection(rand.Intn(int(SnakeDirection_Count))),
 			MoveInterval: 800 * time.Millisecond,
 			Length:       10,
@@ -116,7 +116,7 @@ func (gamingStage *GamingStage) Reset() {
 		snakeObj := snake.GetComponent("GameObj").(*Snake)
 
 		size := gamingStage.screen.GetCanvasSize()
-		snakeObj.SetPosi(shell.Vec2{float32(rand.Intn(size.GetX())), float32(rand.Intn(size.GetY()))})
+		snakeObj.SetPosi(client.Vec2{float32(rand.Intn(size.GetX())), float32(rand.Intn(size.GetY()))})
 
 		gamingStage.snakeObj = snakeObj
 	} else {
@@ -125,13 +125,13 @@ func (gamingStage *GamingStage) Reset() {
 		gamingStage.snakeObj.Length = 10
 
 		size := gamingStage.screen.GetCanvasSize()
-		gamingStage.snakeObj.SetPosi(shell.Vec2{float32(rand.Intn(size.GetX())), float32(rand.Intn(size.GetY()))})
+		gamingStage.snakeObj.SetPosi(client.Vec2{float32(rand.Intn(size.GetX())), float32(rand.Intn(size.GetY()))})
 
 		gamingStage.snakeObj.Reset()
 	}
 
 	if gamingStage.itemsObj == nil {
-		walls := shell.NewAtom(gamingStage.GetEnvironment(), core.NewComponentBundle("GameObj", &Items{
+		walls := client.NewAtom(gamingStage.GetEnvironment(), core.NewComponentBundle("GameObj", &Items{
 			WallColor:  termbox.ColorRed,
 			WallNum:    1,
 			FruitColor: termbox.ColorGreen,
@@ -149,12 +149,12 @@ func (gamingStage *GamingStage) Reset() {
 	}
 }
 
-func (gamingStage *GamingStage) CheckBlocked() (shell.Posi2D, bool) {
+func (gamingStage *GamingStage) CheckBlocked() (client.Posi2D, bool) {
 	if gamingStage.snakeObj == nil {
-		return shell.Posi2D{}, false
+		return client.Posi2D{}, false
 	}
 
-	var pos shell.Posi2D
+	var pos client.Posi2D
 	pos.FromVec(gamingStage.snakeObj.GetPosi())
 
 	size := gamingStage.screen.GetCanvasSize()
@@ -169,7 +169,7 @@ func (gamingStage *GamingStage) CheckBlocked() (shell.Posi2D, bool) {
 
 	block := false
 
-	gamingStage.snakeObj.RangeBody(func(blockPos shell.Posi2D) bool {
+	gamingStage.snakeObj.RangeBody(func(blockPos client.Posi2D) bool {
 		if blockPos == pos {
 			block = true
 			return false
@@ -178,7 +178,7 @@ func (gamingStage *GamingStage) CheckBlocked() (shell.Posi2D, bool) {
 	})
 
 	if gamingStage.itemsObj != nil {
-		gamingStage.itemsObj.RangeWalls(func(blockPos shell.Posi2D) bool {
+		gamingStage.itemsObj.RangeWalls(func(blockPos client.Posi2D) bool {
 			if blockPos == pos {
 				block = true
 				return false
@@ -190,17 +190,17 @@ func (gamingStage *GamingStage) CheckBlocked() (shell.Posi2D, bool) {
 	return pos, block
 }
 
-func (gamingStage *GamingStage) CheckEatFruits() (shell.Posi2D, bool) {
+func (gamingStage *GamingStage) CheckEatFruits() (client.Posi2D, bool) {
 	if gamingStage.snakeObj == nil {
-		return shell.Posi2D{}, false
+		return client.Posi2D{}, false
 	}
 
-	var pos shell.Posi2D
+	var pos client.Posi2D
 	pos.FromVec(gamingStage.snakeObj.GetPosi())
 
 	eat := false
 
-	gamingStage.itemsObj.RangeFruit(func(posi shell.Posi2D) bool {
+	gamingStage.itemsObj.RangeFruit(func(posi client.Posi2D) bool {
 		if pos == posi {
 			eat = true
 			return false
