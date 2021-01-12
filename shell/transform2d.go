@@ -2,7 +2,7 @@ package shell
 
 type Transform2D interface {
 	GetPosi() Vec2
-	SetPosi(pos Vec2)
+	SetPosi(posi Vec2)
 	GetPosiX() float32
 	SetPosiX(v float32)
 	GetPosiY() float32
@@ -20,8 +20,8 @@ func (transBase *Transform2DModule) GetPosi() Vec2 {
 	return transBase.posi
 }
 
-func (transBase *Transform2DModule) SetPosi(pos Vec2) {
-	transBase.posi = pos
+func (transBase *Transform2DModule) SetPosi(posi Vec2) {
+	transBase.posi = posi
 }
 
 func (transBase *Transform2DModule) GetPosiX() float32 {

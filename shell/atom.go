@@ -7,7 +7,7 @@ import (
 type Atom interface {
 	core.Object
 	core.Child
-	core.Transform2D
+	Transform2D
 	core.Data
 }
 
@@ -22,7 +22,7 @@ func NewAtom(env core.Environment, components ...core.ComponentBundle) Atom {
 type _Atom struct {
 	core.ObjectModule
 	core.ChildModule
-	core.Transform2DModule
+	Transform2DModule
 	core.DataModule
 }
 
