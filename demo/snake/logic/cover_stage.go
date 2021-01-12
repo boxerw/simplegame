@@ -14,6 +14,7 @@ type CoverStage struct {
 func (coverStage *CoverStage) Init(object core.Object, name string) {
 	coverStage.Scene = object.(shell.Scene)
 	coverStage.screen = coverStage.GetEnvironment().GetValue("screen").(shell.Screen)
+	coverStage.screen.SetCanvasFGBG(termbox.ColorWhite, termbox.ColorBlack)
 }
 
 func (coverStage *CoverStage) Shut() {

@@ -1,4 +1,4 @@
-package foundation
+package shell
 
 import (
 	"github.com/ungerik/go3d/vec2"

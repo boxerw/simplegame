@@ -21,6 +21,7 @@ func (gamingStage *GamingStage) Init(object core.Object, name string) {
 	gamingStage.Scene = object.(shell.Scene)
 
 	gamingStage.screen = gamingStage.GetEnvironment().GetValue("screen").(shell.Screen)
+	gamingStage.screen.SetCanvasFGBG(termbox.ColorWhite, termbox.ColorBlack)
 
 	gamingStage.controller = shell.NewController(object.GetEnvironment())
 	gamingStage.controller.AddHook(gamingStage)
@@ -101,6 +102,8 @@ func (gamingStage *GamingStage) OnControllerKeyPress(controller shell.Controller
 }
 
 func (gamingStage *GamingStage) Reset() {
+	gamingStage.screen.SetCanvasFGBG(termbox.ColorWhite, termbox.ColorBlack)
+
 	if gamingStage.snakeObj == nil {
 		snake := shell.NewAtom(gamingStage.GetEnvironment(), core.NewComponentBundle("GameObj", &Snake{
 			Direction:    SnakeDirection(rand.Intn(int(SnakeDirection_Count))),
@@ -113,7 +116,7 @@ func (gamingStage *GamingStage) Reset() {
 		snakeObj := snake.GetComponent("GameObj").(*Snake)
 
 		size := gamingStage.screen.GetCanvasSize()
-		snakeObj.SetPosi(core.Vec2{float32(rand.Intn(size.GetX())), float32(rand.Intn(size.GetY()))})
+		snakeObj.SetPosi(shell.Vec2{float32(rand.Intn(size.GetX())), float32(rand.Intn(size.GetY()))})
 
 		gamingStage.snakeObj = snakeObj
 	} else {
@@ -122,7 +125,7 @@ func (gamingStage *GamingStage) Reset() {
 		gamingStage.snakeObj.Length = 10
 
 		size := gamingStage.screen.GetCanvasSize()
-		gamingStage.snakeObj.SetPosi(core.Vec2{float32(rand.Intn(size.GetX())), float32(rand.Intn(size.GetY()))})
+		gamingStage.snakeObj.SetPosi(shell.Vec2{float32(rand.Intn(size.GetX())), float32(rand.Intn(size.GetY()))})
 
 		gamingStage.snakeObj.Reset()
 	}
