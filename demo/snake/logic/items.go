@@ -1,4 +1,4 @@
-package gameobj
+package logic
 
 import (
 	"github.com/nsf/termbox-go"

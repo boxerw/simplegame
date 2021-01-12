@@ -4,7 +4,6 @@ import (
 	"github.com/nsf/termbox-go"
 	"math/rand"
 	"simplegame/core"
-	"simplegame/demo/snake/gameobj"
 	"simplegame/shell"
 	"time"
 )
@@ -14,8 +13,8 @@ type GamingStage struct {
 	shell.ControllerEventHook
 	screen     shell.Screen
 	controller shell.Controller
-	snakeObj   *gameobj.Snake
-	itemsObj   *gameobj.Items
+	snakeObj   *Snake
+	itemsObj   *Items
 }
 
 func (gamingStage *GamingStage) Init(object core.Object, name string) {
@@ -70,20 +69,20 @@ func (gamingStage *GamingStage) OnControllerKeyPress(controller shell.Controller
 
 	switch key {
 	case termbox.KeyArrowUp:
-		if gamingStage.snakeObj.Direction != gameobj.SnakeDirection_Down {
-			gamingStage.snakeObj.Direction = gameobj.SnakeDirection_Up
+		if gamingStage.snakeObj.Direction != SnakeDirection_Down {
+			gamingStage.snakeObj.Direction = SnakeDirection_Up
 		}
 	case termbox.KeyArrowDown:
-		if gamingStage.snakeObj.Direction != gameobj.SnakeDirection_Up {
-			gamingStage.snakeObj.Direction = gameobj.SnakeDirection_Down
+		if gamingStage.snakeObj.Direction != SnakeDirection_Up {
+			gamingStage.snakeObj.Direction = SnakeDirection_Down
 		}
 	case termbox.KeyArrowLeft:
-		if gamingStage.snakeObj.Direction != gameobj.SnakeDirection_Right {
-			gamingStage.snakeObj.Direction = gameobj.SnakeDirection_Left
+		if gamingStage.snakeObj.Direction != SnakeDirection_Right {
+			gamingStage.snakeObj.Direction = SnakeDirection_Left
 		}
 	case termbox.KeyArrowRight:
-		if gamingStage.snakeObj.Direction != gameobj.SnakeDirection_Left {
-			gamingStage.snakeObj.Direction = gameobj.SnakeDirection_Right
+		if gamingStage.snakeObj.Direction != SnakeDirection_Left {
+			gamingStage.snakeObj.Direction = SnakeDirection_Right
 		}
 	}
 
@@ -103,22 +102,22 @@ func (gamingStage *GamingStage) OnControllerKeyPress(controller shell.Controller
 
 func (gamingStage *GamingStage) Reset() {
 	if gamingStage.snakeObj == nil {
-		snake := shell.NewAtom(gamingStage.GetEnvironment(), core.NewComponentBundle("GameObj", &gameobj.Snake{
-			Direction:    gameobj.SnakeDirection(rand.Intn(int(gameobj.SnakeDirection_Count))),
+		snake := shell.NewAtom(gamingStage.GetEnvironment(), core.NewComponentBundle("GameObj", &Snake{
+			Direction:    SnakeDirection(rand.Intn(int(SnakeDirection_Count))),
 			MoveInterval: 800 * time.Millisecond,
 			Length:       10,
 			Color:        termbox.ColorLightGray,
 		}))
 		gamingStage.AddChild(snake)
 
-		snakeObj := snake.GetComponent("GameObj").(*gameobj.Snake)
+		snakeObj := snake.GetComponent("GameObj").(*Snake)
 
 		size := gamingStage.screen.GetCanvasSize()
 		snakeObj.SetPosi(core.Vec2{float32(rand.Intn(size.GetX())), float32(rand.Intn(size.GetY()))})
 
 		gamingStage.snakeObj = snakeObj
 	} else {
-		gamingStage.snakeObj.Direction = gameobj.SnakeDirection(rand.Intn(int(gameobj.SnakeDirection_Count)))
+		gamingStage.snakeObj.Direction = SnakeDirection(rand.Intn(int(SnakeDirection_Count)))
 		gamingStage.snakeObj.MoveInterval = 800 * time.Millisecond
 		gamingStage.snakeObj.Length = 10
 
@@ -129,7 +128,7 @@ func (gamingStage *GamingStage) Reset() {
 	}
 
 	if gamingStage.itemsObj == nil {
-		walls := shell.NewAtom(gamingStage.GetEnvironment(), core.NewComponentBundle("GameObj", &gameobj.Items{
+		walls := shell.NewAtom(gamingStage.GetEnvironment(), core.NewComponentBundle("GameObj", &Items{
 			WallColor:  termbox.ColorRed,
 			WallNum:    1,
 			FruitColor: termbox.ColorGreen,
@@ -137,7 +136,7 @@ func (gamingStage *GamingStage) Reset() {
 		}))
 		gamingStage.AddChild(walls)
 
-		itemsObj := walls.GetComponent("GameObj").(*gameobj.Items)
+		itemsObj := walls.GetComponent("GameObj").(*Items)
 
 		gamingStage.itemsObj = itemsObj
 	} else {

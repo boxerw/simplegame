@@ -1,4 +1,4 @@
-package gameobj
+package logic
 
 import (
 	"github.com/nsf/termbox-go"
@@ -146,10 +146,11 @@ func (snake *Snake) RangeBody(fun func(posi shell.Posi2D) bool) {
 		return
 	}
 
-	for i := 1; i < len(snake.bodyMaps.List); i++ {
-		v := &snake.bodyMaps.List[i]
-		if !fun(v.Posi) {
-			return
+	for i, v := range snake.bodyMaps.List {
+		if i > 0 {
+			if !fun(v.Posi) {
+				return
+			}
 		}
 	}
 }
