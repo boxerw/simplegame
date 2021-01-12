@@ -59,7 +59,7 @@ func (items *Items) AddWall(num int) {
 		items.wallMaps.List = append(items.wallMaps.List, shell.Vertex{
 			Posi: pos,
 			Pixel: shell.Pixel{
-				Ch: '#',
+				Ch: '▒',
 				Fg: items.WallColor,
 				Transparent: shell.Transparent{
 					Bg: true,
@@ -113,7 +113,7 @@ func (items *Items) AddFruit(num int) {
 		items.fruitMaps.List = append(items.fruitMaps.List, shell.Vertex{
 			Posi: pos,
 			Pixel: shell.Pixel{
-				Ch: '$',
+				Ch: '♥',
 				Fg: items.FruitColor,
 				Transparent: shell.Transparent{
 					Bg: true,
