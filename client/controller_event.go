@@ -1,8 +1,8 @@
 package client
 
 import (
+	"github.com/boxerw/simplegame/core"
 	"github.com/nsf/termbox-go"
-	"simplegame/core"
 )
 
 type ControllerEvent interface {

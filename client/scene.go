@@ -1,8 +1,8 @@
 package client
 
 import (
-	"simplegame/core"
-	"simplegame/core/foundation"
+	"github.com/boxerw/simplegame/core"
+	"github.com/boxerw/simplegame/core/foundation"
 )
 
 type Scene interface {

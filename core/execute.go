@@ -2,7 +2,7 @@ package core
 
 import (
 	"context"
-	"simplegame/core/foundation"
+	"github.com/boxerw/simplegame/core/foundation"
 	"sync"
 	"time"
 )

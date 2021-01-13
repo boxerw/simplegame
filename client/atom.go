@@ -1,7 +1,7 @@
 package client
 
 import (
-	"simplegame/core"
+	"github.com/boxerw/simplegame/core"
 )
 
 type Atom interface {

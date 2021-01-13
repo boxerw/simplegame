@@ -1,5 +1,5 @@
 package core
 
-import "simplegame/core/foundation"
+import "github.com/boxerw/simplegame/core/foundation"
 
 type Container = foundation.Container

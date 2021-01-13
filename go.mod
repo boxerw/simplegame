@@ -1,4 +1,4 @@
-module simplegame
+module github.com/boxerw/simplegame
 
 go 1.15
 

@@ -1,7 +1,7 @@
 package core
 
 import (
-	"simplegame/core/foundation"
+	"github.com/boxerw/simplegame/core/foundation"
 	"sync"
 	"sync/atomic"
 )

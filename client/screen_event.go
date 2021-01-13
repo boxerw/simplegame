@@ -1,6 +1,6 @@
 package client
 
-import "simplegame/core"
+import "github.com/boxerw/simplegame/core"
 
 type ScreenEvent interface {
 	OnScreenCanvasSizeChange(screen Screen, oldSize, newSize Posi2D) bool

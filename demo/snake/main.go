@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/boxerw/simplegame/client"
+	"github.com/boxerw/simplegame/core"
+	"github.com/boxerw/simplegame/demo/snake/logic"
 	"math/rand"
-	"simplegame/client"
-	"simplegame/core"
-	"simplegame/demo/snake/logic"
 	"time"
 )
 

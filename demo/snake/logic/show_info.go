@@ -2,9 +2,9 @@ package logic
 
 import (
 	"fmt"
+	"github.com/boxerw/simplegame/client"
+	"github.com/boxerw/simplegame/core"
 	"github.com/nsf/termbox-go"
-	"simplegame/client"
-	"simplegame/core"
 	"time"
 )
 

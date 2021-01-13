@@ -1,10 +1,10 @@
 package logic
 
 import (
+	"github.com/boxerw/simplegame/client"
+	"github.com/boxerw/simplegame/core"
 	"github.com/nsf/termbox-go"
 	"math/rand"
-	"simplegame/client"
-	"simplegame/core"
 )
 
 type Items struct {
